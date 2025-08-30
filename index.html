@@ -15,6 +15,7 @@
       overflow-x: hidden;
       scroll-behavior: smooth;
       font-family: 'Poppins', sans-serif;
+      background-color: #0d0d0d;
     }
     #particles-js {
       position: fixed;
@@ -64,6 +65,18 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #ff3333; }
+    }
+    @keyframes rotating-gear {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
     /* Applied Animations */
     .animate-fadeIn { animation: fadeIn 1.5s forwards; }
     .animate-slideInLeft { animation: slideInLeft 1s forwards; }
@@ -73,7 +86,7 @@
     .running-border {
       position: relative;
       overflow: hidden;
-      border-radius: 1.5rem; /* rounded-3xl */
+      border-radius: 1.5rem;
     }
     .running-border::before {
       content: '';
@@ -84,17 +97,6 @@
       height: 200%;
       background: conic-gradient(transparent, #ff3333, transparent, #ff3333);
       animation: runningBorder 4s linear infinite;
-    }
-    .running-border::after {
-      content: '';
-      position: absolute;
-      top: 0.25rem; /* p-1 */
-      left: 0.25rem; /* p-1 */
-      right: 0.25rem; /* p-1 */
-      bottom: 0.25rem; /* p-1 */
-      background-color: #1a1a1a;
-      border-radius: 1.25rem; /* rounded-2xl */
-      z-index: 1;
     }
     .running-border > * {
       position: relative;
@@ -111,31 +113,6 @@
       box-shadow: 0 0 15px #ff3333, 0 0 25px #ff3333;
       transition: box-shadow 0.3s ease-in-out;
     }
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      padding: 1rem 1.5rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      animation: slideInRight 0.5s forwards;
-    }
-    @keyframes slideInRight {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-    .notification.hidden {
-      display: none;
-    }
-    .notification.success {
-      background-color: #22c55e; /* green-500 */
-      border: 2px solid #16a34a; /* green-600 */
-    }
-    .notification.error {
-      background-color: #ef4444; /* red-500 */
-      border: 2px solid #dc2626; /* red-600 */
-    }
     .modal {
       display: none;
       position: fixed;
@@ -144,7 +121,7 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.8);
       justify-content: center;
       align-items: center;
     }
@@ -156,17 +133,46 @@
       width: 90%;
       box-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
     }
+    .typing-effect p {
+      overflow: hidden;
+      border-right: .15em solid #ff3333; /* The caret */
+      white-space: nowrap;
+      margin: 0 auto;
+      animation:
+        typing 3.5s steps(40, end),
+        blink-caret .75s step-end infinite;
+    }
+    .typing-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      background: #1a1a1a;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      border: 2px solid #ff3333;
+      box-shadow: 0 0 20px #ff3333;
+    }
+    .gear-container {
+      animation: rotating-gear 10s linear infinite;
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-white font-sans">
   <div id="particles-js"></div>
-  <div id="notification-popup" class="notification hidden"></div>
+  
+  <div id="notification-modal" class="modal">
+    <div class="modal-content running-border text-center">
+      <h3 id="notification-title" class="text-2xl font-bold mb-4 text-red-400"></h3>
+      <p id="notification-message" class="text-lg"></p>
+    </div>
+  </div>
   
   <section id="login" class="min-h-screen flex flex-col justify-center items-center text-center p-6 transition-all duration-500">
     <div class="bg-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl animate-fadeIn running-border max-w-md w-full">
       <h1 class="text-4xl md:text-5xl font-bold text-red-500 text-glowing mb-6">Selamat Datang</h1>
       <img src="https://files.catbox.moe/4ss2wq.png" alt="Profile" class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-red-500 glowing-border animate-pulse">
-      <p class="text-gray-300 mb-8 animate-slideInLeft">Silahkan masuk atau buat akun baru.</p>
+      <p class="text-gray-300 mb-8 animate-slideInLeft">Silakan masuk atau buat akun baru.</p>
       
       <div id="login-form-container">
         <div class="space-y-4">
@@ -230,6 +236,19 @@
       </div>
     </section>
 
+    <section id="info-section" class="py-20 px-6 md:px-20 text-center bg-black/80 backdrop-blur-lg">
+      <div class="typing-container">
+        <div class="gear-container">
+          <svg class="w-16 h-16 text-red-500" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2c-5.522 0-10 4.478-10 10s4.478 10 10 10 10-4.478 10-10-4.478-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm-1-12h2v6h-2v-6zm0 8h2v2h-2v-2zm-2.834-9.337l-1.414 1.414c-1.248.879-2.222 2.057-2.834 3.399l1.414 1.414c.421-.57.868-1.12 1.353-1.636l1.414 1.414c-.655.772-1.203 1.583-1.637 2.417l-1.414-1.414c-1.156 1.156-1.896 2.686-1.896 4.316h2c0-1.414.71-2.736 1.896-3.864l1.414 1.414c-.655.772-1.203 1.583-1.637 2.417h2c.421-.57.868-1.12 1.353-1.636l1.414 1.414c-1.248.879-2.222 2.057-2.834 3.399l1.414 1.414c.421-.57.868-1.12 1.353-1.636l1.414 1.414c-1.248.879-2.222 2.057-2.834 3.399l1.414 1.414c.421-.57.868-1.12 1.353-1.636l1.414 1.414c-1.248.879-2.222 2.057-2.834 3.399l1.414 1.414z"/>
+          </svg>
+        </div>
+        <div class="typing-effect text-xl text-gray-300 font-mono">
+          <p>Kepforannas7hs: Pemula di dunia coding, namun siap menghadirkan produk premium.</p>
+        </div>
+      </div>
+    </section>
+
     <section id="payment" class="py-20 px-6 md:px-20 bg-black/80 backdrop-blur-lg text-center">
       <h2 class="text-3xl md:text-4xl font-bold text-red-400 text-glowing mb-12">Metode Pembayaran</h2>
       <div class="flex flex-wrap justify-center gap-6">
@@ -275,10 +294,11 @@
         <button onclick="orderViaWhatsapp('Gopay')" class="w-full glowing-button px-6 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-bold transition duration-300">Order via WhatsApp (Gopay)</button>
         <button onclick="orderViaWhatsapp('QRIS')" class="w-full glowing-button px-6 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-bold transition duration-300">Order via WhatsApp (QRIS)</button>
       </div>
-      <button onclick="closeModal()" class="w-full mt-6 px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 font-semibold transition duration-300">Tutup</button>
+      <button onclick="closeModal('product-modal')" class="w-full mt-6 px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 font-semibold transition duration-300">Tutup</button>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
     // In-memory user data (for demonstration purposes)
     const users = {
@@ -286,20 +306,31 @@
     };
     const adminWhatsApp = '6285768351775';
     const adminTelegram = 'Alpooooooofoluv';
-    const telegramChannel = 'annasbannir';
 
     let currentUser = null;
     let selectedProduct = {};
 
-    function showNotification(message, isSuccess) {
-      const popup = document.getElementById('notification-popup');
-      popup.textContent = message;
-      popup.classList.remove('hidden', 'success', 'error');
-      popup.classList.add(isSuccess ? 'success' : 'error');
+    function showNotification(title, message, isSuccess) {
+      const modal = document.getElementById('notification-modal');
+      const modalTitle = document.getElementById('notification-title');
+      const modalMessage = document.getElementById('notification-message');
+      
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+
+      if (isSuccess) {
+        modal.querySelector('.modal-content').classList.remove('bg-gray-800');
+        modal.querySelector('.modal-content').classList.add('bg-green-800');
+      } else {
+        modal.querySelector('.modal-content').classList.remove('bg-gray-800');
+        modal.querySelector('.modal-content').classList.add('bg-red-800');
+      }
+
+      modal.style.display = 'flex';
       
       setTimeout(() => {
-        popup.classList.add('hidden');
-      }, 4000);
+        modal.style.display = 'none';
+      }, 3000);
     }
 
     function handleLogin() {
@@ -307,13 +338,13 @@
       const password = document.getElementById('login-password').value;
       if (users[username] === password) {
         currentUser = username;
-        showNotification('Login berhasil! Selamat datang, ' + username, true);
+        showNotification('Login Berhasil', 'Selamat datang, ' + username + '!', true);
         setTimeout(() => {
           document.getElementById('login').style.display = 'none';
           document.getElementById('main-content').style.display = 'block';
         }, 1500);
       } else {
-        showNotification('Login gagal. Username atau password salah.', false);
+        showNotification('Login Gagal', 'Username atau password salah.', false);
       }
     }
 
@@ -321,14 +352,14 @@
       const username = document.getElementById('register-username').value;
       const password = document.getElementById('register-password').value;
       if (username.length < 4 || password.length < 4) {
-        showNotification('Username dan password minimal 4 karakter.', false);
+        showNotification('Daftar Gagal', 'Username dan password minimal 4 karakter.', false);
         return;
       }
       if (users[username]) {
-        showNotification('Username sudah terdaftar. Silakan gunakan yang lain.', false);
+        showNotification('Daftar Gagal', 'Username sudah terdaftar. Silakan gunakan yang lain.', false);
       } else {
         users[username] = password;
-        showNotification('Akun berhasil dibuat! Silakan masuk.', true);
+        showNotification('Akun Berhasil Dibuat', 'Silakan masuk dengan akun baru Anda.', true);
         showLoginForm();
       }
     }
@@ -370,9 +401,9 @@
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        showNotification('Nomor berhasil disalin!', true);
+        showNotification('Berhasil!', 'Nomor berhasil disalin.', true);
       }).catch(err => {
-        showNotification('Gagal menyalin nomor.', false);
+        showNotification('Gagal!', 'Gagal menyalin nomor.', false);
       });
     }
 
@@ -385,8 +416,8 @@
       document.getElementById('product-modal').style.display = 'flex';
     }
 
-    function closeModal() {
-      document.getElementById('product-modal').style.display = 'none';
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
     }
 
     function orderViaWhatsapp(paymentMethod) {
@@ -397,7 +428,7 @@
         `Mohon info detail pembayarannya.`
       );
       window.open(`https://wa.me/${adminWhatsApp}?text=${message}`, '_blank');
-      closeModal();
+      closeModal('product-modal');
     }
 
     // Particles.js configuration
