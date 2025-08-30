@@ -77,6 +77,10 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
     /* Applied Animations */
     .animate-fadeIn { animation: fadeIn 1.5s forwards; }
     .animate-slideInLeft { animation: slideInLeft 1s forwards; }
@@ -132,10 +136,11 @@
       max-width: 500px;
       width: 90%;
       box-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
+      animation: popIn 0.5s forwards;
     }
     .typing-effect p {
       overflow: hidden;
-      border-right: .15em solid #ff3333; /* The caret */
+      border-right: .15em solid #ff3333;
       white-space: nowrap;
       margin: 0 auto;
       animation:
@@ -162,7 +167,12 @@
   <div id="particles-js"></div>
   
   <div id="notification-modal" class="modal">
-    <div class="modal-content running-border text-center">
+    <div class="modal-content running-border text-center relative">
+      <button onclick="closeModal('notification-modal')" class="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
       <h3 id="notification-title" class="text-2xl font-bold mb-4 text-red-400"></h3>
       <p id="notification-message" class="text-lg"></p>
     </div>
@@ -262,7 +272,7 @@
     <section id="contact" class="py-16 bg-black/90 text-center">
       <h2 class="text-3xl font-bold text-red-400 text-glowing mb-4">Hubungi Admin</h2>
       <p class="text-lg text-gray-300 mb-6">Untuk pertanyaan, pemesanan, atau dukungan, silakan hubungi kami.</p>
-      <div class="flex justify-center gap-4">
+      <div class="flex flex-wrap justify-center gap-4">
         <a href="https://wa.me/6285768351775" target="_blank" class="glowing-button inline-flex items-center px-6 py-3 bg-green-600 rounded-full shadow-lg hover:bg-green-500 transition duration-300 font-bold text-lg">
           <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12.04 2.87c-5.06 0-9.17 4.11-9.17 9.17s4.11 9.17 9.17 9.17 9.17-4.11 9.17-9.17-4.11-9.17-9.17-9.17zm0 16.79c-4.21 0-7.62-3.41-7.62-7.62s3.41-7.62 7.62-7.62 7.62 3.41 7.62 7.62-3.41 7.62-7.62 7.62zm1.99-13.67c-.24-.26-.64-.26-.88 0-.42.45-1.12 1.37-1.39 1.7-.5.6-.96 1.48-1.12 2.3-.23 1.15-.05 2.16.5 3.01.5.79 1.17 1.54 1.83 2.21.6.6.6 1.63.02 2.24-.62.62-1.63.62-2.25 0l-.33-.33c-.24-.24-.64-.24-.88 0-.58.58-1.13 1.13-1.65 1.66-.46.46-.46 1.2 0 1.66l.33.33c.6.6 1.34 1.1 2.22 1.1 1.05 0 2.2-.42 3.14-1.35 1.05-1.04 1.64-2.45 1.64-3.92 0-.46-.08-1.28-.27-2.02-.2-.84-.66-1.74-1.25-2.52-.37-.5-.65-.79-.96-.92z"/>
@@ -275,15 +285,23 @@
           </svg>
           Telegram Admin
         </a>
+        <a href="https://t.me/annasbannir" target="_blank" class="glowing-button inline-flex items-center px-6 py-3 bg-blue-600 rounded-full shadow-lg hover:bg-blue-500 transition duration-300 font-bold text-lg">
+          <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.35 9.043l-4.225 9.695c-.322.752-.767.842-1.096.536l-2.028-1.956c-.29-.282-.578-.564-.867-.846l-2.115-2.039c-.29-.283-.222-.591.066-.867l9.894-6.427c.451-.284.847-.132.536.273l-10.027 8.163-.031-.027-.031-.027c-.287-.279-.575-.561-.864-.844-.29-.282-.121-.59.167-.866l10.027-8.163c.451-.284.847-.132.536.273z"/>
+          </svg>
+          Saluran Telegram
+        </a>
       </div>
-      <p class="mt-4 text-sm text-gray-500">
-        Saluran Telegram: <a href="https://t.me/annasbannir" target="_blank" class="text-blue-400 hover:underline">annasbannir</a>
-      </p>
     </section>
   </main>
 
   <div id="product-modal" class="modal">
-    <div class="modal-content running-border animate-fadeIn">
+    <div class="modal-content running-border animate-fadeIn relative">
+      <button onclick="closeModal('product-modal')" class="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
       <h3 id="modal-title" class="text-2xl font-bold mb-4 text-red-400"></h3>
       <img id="modal-image" class="w-full h-auto rounded-lg mb-4 glowing-border">
       <p id="modal-price" class="text-red-300 font-bold text-xl mb-2"></p>
@@ -294,7 +312,6 @@
         <button onclick="orderViaWhatsapp('Gopay')" class="w-full glowing-button px-6 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-bold transition duration-300">Order via WhatsApp (Gopay)</button>
         <button onclick="orderViaWhatsapp('QRIS')" class="w-full glowing-button px-6 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-bold transition duration-300">Order via WhatsApp (QRIS)</button>
       </div>
-      <button onclick="closeModal('product-modal')" class="w-full mt-6 px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 font-semibold transition duration-300">Tutup</button>
     </div>
   </div>
 
@@ -305,13 +322,13 @@
       'admin1': 'password123',
     };
     const adminWhatsApp = '6285768351775';
-    const adminTelegram = 'Alpooooooofoluv';
 
     let currentUser = null;
     let selectedProduct = {};
 
     function showNotification(title, message, isSuccess) {
       const modal = document.getElementById('notification-modal');
+      const modalContent = modal.querySelector('.modal-content');
       const modalTitle = document.getElementById('notification-title');
       const modalMessage = document.getElementById('notification-message');
       
@@ -319,18 +336,22 @@
       modalMessage.textContent = message;
 
       if (isSuccess) {
-        modal.querySelector('.modal-content').classList.remove('bg-gray-800');
-        modal.querySelector('.modal-content').classList.add('bg-green-800');
+        modalContent.classList.remove('bg-red-800');
+        modalContent.classList.add('bg-green-800');
+        modalTitle.classList.remove('text-red-400');
+        modalTitle.classList.add('text-green-400');
       } else {
-        modal.querySelector('.modal-content').classList.remove('bg-gray-800');
-        modal.querySelector('.modal-content').classList.add('bg-red-800');
+        modalContent.classList.remove('bg-green-800');
+        modalContent.classList.add('bg-red-800');
+        modalTitle.classList.remove('text-green-400');
+        modalTitle.classList.add('text-red-400');
       }
 
       modal.style.display = 'flex';
       
       setTimeout(() => {
-        modal.style.display = 'none';
-      }, 3000);
+        closeModal('notification-modal');
+      }, 5000);
     }
 
     function handleLogin() {
