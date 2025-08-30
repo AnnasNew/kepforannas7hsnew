@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kepforannas7hs - Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+            background: linear-gradient(to bottom, #1a0000, #330000, #0a0a0a);
+        }
+        .product-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 0, 0, 0.4);
+        }
+        .animate-pulse-light {
+            animation: pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-light {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .qris-download-button {
+            transition: background-color 0.3s ease-in-out;
+        }
+        .qris-download-button:hover {
+            background-color: #ef4444; /* red-500 */
+        }
+    </style>
+</head>
+<body class="text-white font-sans">
+    <header class="py-6 px-8 flex justify-between items-center bg-black/50 backdrop-blur-md sticky top-0 z-50">
+        <h1 class="text-2xl font-bold text-red-400">Kepforannas7hs Store</h1>
+        <div class="flex items-center space-x-4">
+            <button onclick="logout()" class="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-500">Logout</button>
+        </div>
+    </header>
+
+    <section id="store" class="py-20 px-6 md:px-20">
+        <h2 class="text-3xl font-bold text-center text-red-400 mb-12 animate-pulse-light">Produk Premium Kami</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="product-card p-6 bg-gradient-to-br from-red-800 to-black rounded-2xl shadow-lg">
+                <img src="https://files.catbox.moe/4ss2wq.png" alt="Script Telegram" class="w-full h-40 object-cover rounded-xl mb-4 transform hover:scale-105 transition-transform">
+                <h3 class="text-2xl font-semibold text-red-300">Open Script Telegram</h3>
+                <p class="mt-2 text-gray-300">Harga: <span class="font-bold text-red-300">100k</span></p>
+                <p class="mt-2 text-sm text-gray-400">Script Telegram premium dengan fitur lengkap dan keamanan hard.</p>
+                <button onclick="buyItem('Script Telegram', '100k')" class="mt-6 px-5 py-2 w-full bg-red-600 rounded-lg hover:bg-red-500 transition-all">Beli Sekarang</button>
+            </div>
+            <div class="product-card p-6 bg-gradient-to-br from-red-800 to-black rounded-2xl shadow-lg">
+                <img src="https://files.catbox.moe/iddhhf.jpeg" alt="Partner" class="w-full h-40 object-cover rounded-xl mb-4 transform hover:scale-105 transition-transform">
+                <h3 class="text-2xl font-semibold text-red-300">Open Partner</h3>
+                <p class="mt-2 text-gray-300">Harga: <span class="font-bold text-red-300">150k</span></p>
+                <p class="mt-2 text-sm text-gray-400">Dapatkan akses ke NoEnc Tredict, Function New, dan banyak lagi!</p>
+                <button onclick="buyItem('Partner', '150k')" class="mt-6 px-5 py-2 w-full bg-red-600 rounded-lg hover:bg-red-500 transition-all">Beli Sekarang</button>
+            </div>
+             <div class="product-card p-6 bg-gradient-to-br from-red-800 to-black rounded-2xl shadow-lg">
+                <img src="https://files.catbox.moe/4ss2wq.png" alt="Owner" class="w-full h-40 object-cover rounded-xl mb-4 transform hover:scale-105 transition-transform">
+                <h3 class="text-2xl font-semibold text-red-300">Open Owner</h3>
+                <p class="mt-2 text-gray-300">Harga: <span class="font-bold text-red-300">???</span></p>
+                <p class="mt-2 text-sm text-gray-400">Akses penuh ke semua tools dan script kami, plus hak jual kembali.</p>
+                <button onclick="buyItem('Owner', 'Harga Nego')" class="mt-6 px-5 py-2 w-full bg-red-600 rounded-lg hover:bg-red-500 transition-all">Beli Sekarang</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 md:px-20 bg-black/80 backdrop-blur-lg text-center">
+        <h2 class="text-3xl font-bold text-red-400">Metode Pembayaran</h2>
+        <p class="mt-2 text-gray-300">Silakan pilih metode pembayaran favorit Anda.</p>
+        <div class="flex flex-col md:flex-row justify-center gap-6 mt-10">
+            <button onclick="showPayment('Dana', '083173814158')" class="px-6 py-3 bg-red-700 rounded-xl shadow-lg hover:bg-red-600 transition-all">Dana</button>
+            <button onclick="showPayment('Gopay', '083173814158')" class="px-6 py-3 bg-red-700 rounded-xl shadow-lg hover:bg-red-600 transition-all">Gopay</button>
+            <button onclick="showPayment('QRIS', 'https://files.catbox.moe/iddhhf.jpeg')" class="px-6 py-3 bg-red-700 rounded-xl shadow-lg hover:bg-red-600 transition-all">QRIS</button>
+        </div>
+        <div id="paymentInfo" class="mt-8 text-lg font-semibold text-gray-300"></div>
+    </section>
+
+    <section class="py-16 bg-black/90 text-center">
+        <h2 class="text-2xl font-bold text-red-400 mb-4">Butuh Bantuan?</h2>
+        <p class="text-lg text-gray-300">Hubungi admin melalui Telegram untuk pertanyaan atau bantuan.</p>
+        <a href="https://t.me/Xatanicvxii" target="_blank" class="mt-6 inline-block px-6 py-3 bg-red-700 rounded-xl shadow-lg hover:bg-red-600 transition-all">Chat Admin @Xatanicvxii</a>
+    </section>
+
+    <script>
+        function logout() {
+            // Hapus status login dari penyimpanan lokal atau sesi
+            alert('Anda telah logout.');
+            window.location.href = 'index.html'; // Redirect ke halaman login
+        }
+
+        function showPayment(method, info) {
+            let box = document.getElementById("paymentInfo");
+            if (method === 'QRIS') {
+                box.innerHTML = `
+                    <p class="mt-4">Pindai QR Code di bawah atau klik untuk mengunduh.</p>
+                    <a href="${info}" download="QRIS_Kepforannas7hs" class="inline-block mt-4">
+                        <img src="${info}" alt="QRIS" class="mx-auto w-64 md:w-80 rounded-lg shadow-lg border-4 border-red-700">
+                    </a>
+                `;
+            } else {
+                box.innerHTML = `<p class="mt-4 bg-gray-900 p-4 rounded-lg inline-block">Nomor ${method}: <span class="text-red-300">${info}</span></p>`;
+            }
+        }
+        
+        function buyItem(item, price) {
+            const username = "Xatanicvxii"; 
+            let message = encodeURIComponent(`Halo, saya ingin membeli ${item} dengan harga ${price}. Apakah produknya masih tersedia?`);
+            window.open(`https://t.me/${username}?text=${message}`, "_blank");
+        }
+    </script>
+</body>
+</html>
