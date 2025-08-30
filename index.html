@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toko Online Premium</title>
+  <title>Kepforannas7hs - Toko Online Premium</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
     body, html {
       margin: 0;
       padding: 0;
@@ -13,6 +14,7 @@
       width: 100%;
       overflow-x: hidden;
       scroll-behavior: smooth;
+      font-family: 'Poppins', sans-serif;
     }
     #particles-js {
       position: fixed;
@@ -48,17 +50,56 @@
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
-    @keyframes glowingBorder {
+    @keyframes glowing {
       0% { box-shadow: 0 0 5px #ff3333; }
       50% { box-shadow: 0 0 20px #ff3333, 0 0 30px #ff3333; }
       100% { box-shadow: 0 0 5px #ff3333; }
+    }
+    @keyframes glowingText {
+      0% { text-shadow: 0 0 5px #ff3333; }
+      50% { text-shadow: 0 0 15px #ff3333; }
+      100% { text-shadow: 0 0 5px #ff3333; }
+    }
+    @keyframes runningBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     /* Applied Animations */
     .animate-fadeIn { animation: fadeIn 1.5s forwards; }
     .animate-slideInLeft { animation: slideInLeft 1s forwards; }
     .animate-pulse { animation: pulse 2s infinite; }
-    .glowing-border { animation: glowingBorder 2s infinite; }
-    .text-glowing { text-shadow: 0 0 10px #ff3333; }
+    .glowing-border { animation: glowing 2s infinite; }
+    .text-glowing { animation: glowingText 2s infinite; }
+    .running-border {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.5rem; /* rounded-3xl */
+    }
+    .running-border::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(transparent, #ff3333, transparent, #ff3333);
+      animation: runningBorder 4s linear infinite;
+    }
+    .running-border::after {
+      content: '';
+      position: absolute;
+      top: 0.25rem; /* p-1 */
+      left: 0.25rem; /* p-1 */
+      right: 0.25rem; /* p-1 */
+      bottom: 0.25rem; /* p-1 */
+      background-color: #1a1a1a;
+      border-radius: 1.25rem; /* rounded-2xl */
+      z-index: 1;
+    }
+    .running-border > * {
+      position: relative;
+      z-index: 2;
+    }
     .product-image-container:hover .product-image {
       transform: scale(1.1) rotate(5deg);
       transition: transform 0.5s ease-in-out;
@@ -70,15 +111,61 @@
       box-shadow: 0 0 15px #ff3333, 0 0 25px #ff3333;
       transition: box-shadow 0.3s ease-in-out;
     }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      padding: 1rem 1.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      animation: slideInRight 0.5s forwards;
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .notification.hidden {
+      display: none;
+    }
+    .notification.success {
+      background-color: #22c55e; /* green-500 */
+      border: 2px solid #16a34a; /* green-600 */
+    }
+    .notification.error {
+      background-color: #ef4444; /* red-500 */
+      border: 2px solid #dc2626; /* red-600 */
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 0 20px rgba(255, 51, 51, 0.5);
+    }
   </style>
 </head>
 <body class="bg-gray-900 text-white font-sans">
   <div id="particles-js"></div>
-  <div id="notification-popup" class="fixed top-5 right-5 z-50 p-4 rounded-lg shadow-lg hidden"></div>
+  <div id="notification-popup" class="notification hidden"></div>
   
   <section id="login" class="min-h-screen flex flex-col justify-center items-center text-center p-6 transition-all duration-500">
-    <div class="bg-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl animate-fadeIn glowing-border max-w-md w-full">
-      <h1 class="text-4xl md:text-5xl font-bold text-glowing text-red-500 mb-6">Selamat Datang</h1>
+    <div class="bg-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl animate-fadeIn running-border max-w-md w-full">
+      <h1 class="text-4xl md:text-5xl font-bold text-red-500 text-glowing mb-6">Selamat Datang</h1>
+      <img src="https://files.catbox.moe/4ss2wq.png" alt="Profile" class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-red-500 glowing-border animate-pulse">
       <p class="text-gray-300 mb-8 animate-slideInLeft">Silahkan masuk atau buat akun baru.</p>
       
       <div id="login-form-container">
@@ -104,39 +191,41 @@
   <main id="main-content" class="hidden">
     <section id="hero" class="h-screen flex flex-col justify-center items-center text-center p-6">
       <img src="https://files.catbox.moe/4ss2wq.png" alt="Logo Toko Online" class="w-32 h-32 md:w-48 md:h-48 mb-6 animate-pulse">
-      <h1 class="text-4xl md:text-6xl font-extrabold text-glowing">Toko Online Premium Kepforannas7hs</h1>
+      <h1 class="text-4xl md:text-6xl font-extrabold text-glowing">Toko Online Kepforannas7hs</h1>
       <p class="mt-4 text-lg md:text-2xl text-gray-300 animate-slideInLeft">Desain Keren, Produk Berkualitas, Pembayaran Mudah.</p>
     </section>
 
-    <section id="products" class="py-20 px-6 md:px-20 bg-black/60 backdrop-blur-lg rounded-t-3xl">
-      <h2 class="text-3xl md:text-4xl font-bold text-center text-red-400 text-glowing mb-12">Produk Unggulan</h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-        <div class="p-6 bg-gradient-to-br from-gray-800 to-black rounded-2xl shadow-xl glowing-border animate-fadeIn">
-          <div class="product-image-container relative overflow-hidden rounded-xl">
-            <img src="https://files.catbox.moe/example_product1.png" alt="Produk 1" class="product-image w-full h-auto rounded-xl">
+    <section id="products" class="py-20 px-6 md:px-20 bg-black/60 backdrop-blur-lg rounded-t-3xl running-border">
+      <div class="p-6 md:p-10">
+        <h2 class="text-3xl md:text-4xl font-bold text-center text-red-400 text-glowing mb-12">Produk Unggulan</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div class="p-6 bg-gradient-to-br from-gray-800 to-black rounded-2xl shadow-xl glowing-border animate-fadeIn">
+            <div class="product-image-container relative overflow-hidden rounded-xl">
+              <img src="https://files.catbox.moe/x9w709.jpg" alt="Produk 1" class="product-image w-full h-auto rounded-xl">
+            </div>
+            <h3 class="text-2xl font-semibold mt-4">Script Telegram Premium</h3>
+            <p class="mt-2 text-red-300 font-bold text-lg">Rp 100.000</p>
+            <p class="mt-2 text-gray-400">Script Telegram dengan fitur-fitur premium dan keamanan tingkat tinggi.</p>
+            <button onclick="showProductDetails('Script Telegram Premium', 'https://files.catbox.moe/x9w709.jpg', 'Rp 100.000', 'Script Telegram dengan fitur premium dan keamanan tingkat tinggi.')" class="glowing-button w-full mt-5 px-5 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-semibold transition duration-300">Beli Sekarang</button>
           </div>
-          <h3 class="text-2xl font-semibold mt-4">Script Telegram Premium</h3>
-          <p class="mt-2 text-red-300 font-bold text-lg">Rp 100.000</p>
-          <p class="mt-2 text-gray-400">Script Telegram dengan fitur-fitur premium dan keamanan tingkat tinggi.</p>
-          <a href="#" onclick="contactAdmin('Script Telegram Premium')" class="glowing-button block text-center mt-5 px-5 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-semibold transition duration-300">Beli Sekarang</a>
-        </div>
-        <div class="p-6 bg-gradient-to-br from-gray-800 to-black rounded-2xl shadow-xl glowing-border animate-fadeIn" style="animation-delay: 0.2s;">
-          <div class="product-image-container relative overflow-hidden rounded-xl">
-            <img src="https://files.catbox.moe/example_product2.png" alt="Produk 2" class="product-image w-full h-auto rounded-xl">
+          <div class="p-6 bg-gradient-to-br from-gray-800 to-black rounded-2xl shadow-xl glowing-border animate-fadeIn" style="animation-delay: 0.2s;">
+            <div class="product-image-container relative overflow-hidden rounded-xl">
+              <img src="https://files.catbox.moe/k3l5c0.jpg" alt="Produk 2" class="product-image w-full h-auto rounded-xl">
+            </div>
+            <h3 class="text-2xl font-semibold mt-4">Paket Owner VIP</h3>
+            <p class="mt-2 text-red-300 font-bold text-lg">Rp 250.000</p>
+            <p class="mt-2 text-gray-400">Dapatkan akses penuh ke semua tools dan fitur eksklusif untuk Owner.</p>
+            <button onclick="showProductDetails('Paket Owner VIP', 'https://files.catbox.moe/k3l5c0.jpg', 'Rp 250.000', 'Akses penuh ke semua tools dan fitur eksklusif, termasuk NoEnc Tredict, Function New, dan banyak lagi.')" class="glowing-button w-full mt-5 px-5 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-semibold transition duration-300">Beli Sekarang</button>
           </div>
-          <h3 class="text-2xl font-semibold mt-4">Paket Owner VIP</h3>
-          <p class="mt-2 text-red-300 font-bold text-lg">Rp 250.000</p>
-          <p class="mt-2 text-gray-400">Dapatkan akses penuh ke semua tools dan fitur eksklusif untuk Owner.</p>
-          <a href="#" onclick="contactAdmin('Paket Owner VIP')" class="glowing-button block text-center mt-5 px-5 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-semibold transition duration-300">Beli Sekarang</a>
-        </div>
-        <div class="p-6 bg-gradient-to-br from-gray-800 to-black rounded-2xl shadow-xl glowing-border animate-fadeIn" style="animation-delay: 0.4s;">
-          <div class="product-image-container relative overflow-hidden rounded-xl">
-            <img src="https://files.catbox.moe/example_product3.png" alt="Produk 3" class="product-image w-full h-auto rounded-xl">
+          <div class="p-6 bg-gradient-to-br from-gray-800 to-black rounded-2xl shadow-xl glowing-border animate-fadeIn" style="animation-delay: 0.4s;">
+            <div class="product-image-container relative overflow-hidden rounded-xl">
+              <img src="https://files.catbox.moe/6f0z5k.jpg" alt="Produk 3" class="product-image w-full h-auto rounded-xl">
+            </div>
+            <h3 class="text-2xl font-semibold mt-4">Tools Anti Bypass</h3>
+            <p class="mt-2 text-red-300 font-bold text-lg">Rp 120.000</p>
+            <p class="mt-2 text-gray-400">Amankan script Anda dari bypass dan crack dengan tools canggih ini.</p>
+            <button onclick="showProductDetails('Tools Anti Bypass', 'https://files.catbox.moe/6f0z5k.jpg', 'Rp 120.000', 'Amankan script Anda dari bypass dan crack dengan tools canggih yang bisa dipakai di script Anda.')" class="glowing-button w-full mt-5 px-5 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-semibold transition duration-300">Beli Sekarang</button>
           </div>
-          <h3 class="text-2xl font-semibold mt-4">Tools Anti Bypass</h3>
-          <p class="mt-2 text-red-300 font-bold text-lg">Rp 120.000</p>
-          <p class="mt-2 text-gray-400">Amankan script Anda dari bypass dan crack dengan tools canggih ini.</p>
-          <a href="#" onclick="contactAdmin('Tools Anti Bypass')" class="glowing-button block text-center mt-5 px-5 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-semibold transition duration-300">Beli Sekarang</a>
         </div>
       </div>
     </section>
@@ -153,46 +242,75 @@
 
     <section id="contact" class="py-16 bg-black/90 text-center">
       <h2 class="text-3xl font-bold text-red-400 text-glowing mb-4">Hubungi Admin</h2>
-      <p class="text-lg text-gray-300 mb-6">Untuk pertanyaan, pemesanan, atau dukungan, silakan hubungi kami via WhatsApp.</p>
-      <a href="https://wa.me/6285768351775" target="_blank" class="glowing-button inline-block px-8 py-4 bg-green-600 rounded-xl shadow-lg hover:bg-green-500 transition duration-300 font-bold text-lg animate-pulse">
-        <span class="mr-2">Chat WhatsApp</span>
-      </a>
+      <p class="text-lg text-gray-300 mb-6">Untuk pertanyaan, pemesanan, atau dukungan, silakan hubungi kami.</p>
+      <div class="flex justify-center gap-4">
+        <a href="https://wa.me/6285768351775" target="_blank" class="glowing-button inline-flex items-center px-6 py-3 bg-green-600 rounded-full shadow-lg hover:bg-green-500 transition duration-300 font-bold text-lg">
+          <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.04 2.87c-5.06 0-9.17 4.11-9.17 9.17s4.11 9.17 9.17 9.17 9.17-4.11 9.17-9.17-4.11-9.17-9.17-9.17zm0 16.79c-4.21 0-7.62-3.41-7.62-7.62s3.41-7.62 7.62-7.62 7.62 3.41 7.62 7.62-3.41 7.62-7.62 7.62zm1.99-13.67c-.24-.26-.64-.26-.88 0-.42.45-1.12 1.37-1.39 1.7-.5.6-.96 1.48-1.12 2.3-.23 1.15-.05 2.16.5 3.01.5.79 1.17 1.54 1.83 2.21.6.6.6 1.63.02 2.24-.62.62-1.63.62-2.25 0l-.33-.33c-.24-.24-.64-.24-.88 0-.58.58-1.13 1.13-1.65 1.66-.46.46-.46 1.2 0 1.66l.33.33c.6.6 1.34 1.1 2.22 1.1 1.05 0 2.2-.42 3.14-1.35 1.05-1.04 1.64-2.45 1.64-3.92 0-.46-.08-1.28-.27-2.02-.2-.84-.66-1.74-1.25-2.52-.37-.5-.65-.79-.96-.92z"/>
+          </svg>
+          Chat WhatsApp
+        </a>
+        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="glowing-button inline-flex items-center px-6 py-3 bg-blue-600 rounded-full shadow-lg hover:bg-blue-500 transition duration-300 font-bold text-lg">
+          <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.35 9.043l-4.225 9.695c-.322.752-.767.842-1.096.536l-2.028-1.956c-.29-.282-.578-.564-.867-.846l-2.115-2.039c-.29-.283-.222-.591.066-.867l9.894-6.427c.451-.284.847-.132.536.273l-10.027 8.163-.031-.027-.031-.027c-.287-.279-.575-.561-.864-.844-.29-.282-.121-.59.167-.866l10.027-8.163c.451-.284.847-.132.536.273z"/>
+          </svg>
+          Telegram Admin
+        </a>
+      </div>
+      <p class="mt-4 text-sm text-gray-500">
+        Saluran Telegram: <a href="https://t.me/annasbannir" target="_blank" class="text-blue-400 hover:underline">annasbannir</a>
+      </p>
     </section>
   </main>
+
+  <div id="product-modal" class="modal">
+    <div class="modal-content running-border animate-fadeIn">
+      <h3 id="modal-title" class="text-2xl font-bold mb-4 text-red-400"></h3>
+      <img id="modal-image" class="w-full h-auto rounded-lg mb-4 glowing-border">
+      <p id="modal-price" class="text-red-300 font-bold text-xl mb-2"></p>
+      <p id="modal-description" class="text-gray-400 mb-6"></p>
+      <div class="space-y-4">
+        <h4 class="text-lg font-semibold text-gray-300">Pilih Metode Pembayaran:</h4>
+        <button onclick="orderViaWhatsapp('Dana')" class="w-full glowing-button px-6 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-bold transition duration-300">Order via WhatsApp (Dana)</button>
+        <button onclick="orderViaWhatsapp('Gopay')" class="w-full glowing-button px-6 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-bold transition duration-300">Order via WhatsApp (Gopay)</button>
+        <button onclick="orderViaWhatsapp('QRIS')" class="w-full glowing-button px-6 py-3 bg-red-600 rounded-lg hover:bg-red-500 font-bold transition duration-300">Order via WhatsApp (QRIS)</button>
+      </div>
+      <button onclick="closeModal()" class="w-full mt-6 px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 font-semibold transition duration-300">Tutup</button>
+    </div>
+  </div>
 
   <script>
     // In-memory user data (for demonstration purposes)
     const users = {
-      '1': '1',
+      'admin1': 'password123',
     };
     const adminWhatsApp = '6285768351775';
+    const adminTelegram = 'Alpooooooofoluv';
+    const telegramChannel = 'annasbannir';
 
-    // State
     let currentUser = null;
+    let selectedProduct = {};
 
     function showNotification(message, isSuccess) {
       const popup = document.getElementById('notification-popup');
       popup.textContent = message;
-      popup.classList.remove('hidden', 'bg-red-600', 'bg-green-600');
-      popup.classList.add(isSuccess ? 'bg-green-600' : 'bg-red-600');
-      popup.style.animation = 'fadeIn 0.5s forwards';
+      popup.classList.remove('hidden', 'success', 'error');
+      popup.classList.add(isSuccess ? 'success' : 'error');
+      
       setTimeout(() => {
-        popup.style.animation = 'fadeOut 0.5s forwards';
-        setTimeout(() => popup.classList.add('hidden'), 500);
-      }, 3000);
+        popup.classList.add('hidden');
+      }, 4000);
     }
 
     function handleLogin() {
       const username = document.getElementById('login-username').value;
       const password = document.getElementById('login-password').value;
-
       if (users[username] === password) {
         currentUser = username;
         showNotification('Login berhasil! Selamat datang, ' + username, true);
         setTimeout(() => {
-          document.getElementById('login').classList.add('hidden');
-          document.getElementById('main-content').classList.remove('hidden');
-          document.getElementById('main-content').style.animation = 'fadeIn 1s forwards';
+          document.getElementById('login').style.display = 'none';
+          document.getElementById('main-content').style.display = 'block';
         }, 1500);
       } else {
         showNotification('Login gagal. Username atau password salah.', false);
@@ -202,12 +320,10 @@
     function handleRegister() {
       const username = document.getElementById('register-username').value;
       const password = document.getElementById('register-password').value;
-
       if (username.length < 4 || password.length < 4) {
         showNotification('Username dan password minimal 4 karakter.', false);
         return;
       }
-
       if (users[username]) {
         showNotification('Username sudah terdaftar. Silakan gunakan yang lain.', false);
       } else {
@@ -230,9 +346,7 @@
     function showPayment(method, info) {
       const paymentInfoDiv = document.getElementById('payment-info');
       paymentInfoDiv.classList.remove('hidden');
-      let htmlContent = `
-        <h3 class="text-2xl font-bold text-red-300 mb-4">${method}</h3>
-      `;
+      let htmlContent = `<h3 class="text-2xl font-bold text-red-300 mb-4">${method}</h3>`;
       if (method === 'QRIS') {
         htmlContent += `
           <img src="${info}" alt="QRIS Code" class="mx-auto w-64 md:w-80 rounded-xl glowing-border transition duration-300 hover:scale-105">
@@ -245,9 +359,7 @@
           <div class="relative bg-gray-700 p-4 rounded-lg glowing-border">
             <span id="account-number" class="text-yellow-300 font-mono text-2xl tracking-wider">${info}</span>
             <button onclick="copyToClipboard('${info}')" class="absolute top-2 right-2 p-2 rounded-full bg-red-500 hover:bg-red-400">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M8 2a2 2 0 00-2 2v2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V8a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H8zM6 4a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v1h-6V4zm2 7H7a1 1 0 00-1 1v4a1 1 0 001 1h6a1 1 0 001-1v-4a1 1 0 00-1-1h-1v-2a1 1 0 10-2 0v2z" />
-              </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M8 2a2 2 0 00-2 2v2H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V8a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H8zM6 4a.5.5 0 01.5-.5h5a.5.5 0 01.5.5v1h-6V4zm2 7H7a1 1 0 00-1 1v4a1 1 0 001 1h6a1 1 0 001-1v-4a1 1 0 00-1-1h-1v-2a1 1 0 10-2 0v2z" /></svg>
             </button>
           </div>
           <p class="mt-4 text-gray-400">Salin nomor di atas untuk transfer.</p>
@@ -264,9 +376,28 @@
       });
     }
 
-    function contactAdmin(productName) {
-      const message = encodeURIComponent(`Halo, saya tertarik untuk membeli produk: ${productName}.`);
+    function showProductDetails(title, image, price, description) {
+      selectedProduct = { title, image, price, description };
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-image').src = image;
+      document.getElementById('modal-price').textContent = price;
+      document.getElementById('modal-description').textContent = description;
+      document.getElementById('product-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('product-modal').style.display = 'none';
+    }
+
+    function orderViaWhatsapp(paymentMethod) {
+      const message = encodeURIComponent(
+        `Halo admin, saya ingin order produk *${selectedProduct.title}*.\n` +
+        `Harga: ${selectedProduct.price}\n` +
+        `Metode pembayaran yang dipilih: ${paymentMethod}.\n\n` +
+        `Mohon info detail pembayarannya.`
+      );
       window.open(`https://wa.me/${adminWhatsApp}?text=${message}`, '_blank');
+      closeModal();
     }
 
     // Particles.js configuration
