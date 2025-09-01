@@ -1,112 +1,127 @@
-const whatsappNumber = "6285768351775";
 let selectedProduct = {};
 
-function openModal(type) {
-    const modal = document.getElementById(type + '-modal');
+function openModal(modalId) {
+    const modal = document.getElementById(modalId + '-modal');
     if (modal) {
         modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
     }
 }
 
-function closeModal(type) {
-    const modal = document.getElementById(type + '-modal');
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId + '-modal');
     if (modal) {
         modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
     }
-}
-
-function copyText(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Nomor berhasil disalin!");
-    }).catch(err => {
-        console.error('Gagal menyalin: ', err);
-        alert("Gagal menyalin nomor.");
-    });
-}
-
-function downloadImage(imageUrl, filename) {
-    fetch(imageUrl)
-        .then(response => response.blob())
-        .then(blob => {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        })
-        .catch(err => console.error('Gagal mengunduh gambar', err));
-}
-
-function formatRupiah(number) {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
 }
 
 function openProductModal(name, image, price) {
-    selectedProduct = {
-        name: name,
-        image: image,
-        price: price
-    };
-    closeModal('shop');
-    document.getElementById('modal-product-name').textContent = selectedProduct.name;
-    document.getElementById('modal-product-image').src = selectedProduct.image;
-    document.getElementById('modal-product-price').textContent = formatRupiah(selectedProduct.price);
+    selectedProduct = { name, image, price };
+    document.getElementById('modal-product-name').innerText = name;
+    document.getElementById('modal-product-image').src = image;
+    document.getElementById('modal-product-price').innerText = formatRupiah(price);
     document.getElementById('product-quantity').value = 1;
     updateTotalPrice();
+    closeModal('shop');
     openModal('product');
+}
+
+function changeQuantity(change) {
+    const quantityInput = document.getElementById('product-quantity');
+    let quantity = parseInt(quantityInput.value);
+    quantity += change;
+    if (quantity < 1) {
+        quantity = 1;
+        showNotification('Jumlah tidak bisa kurang dari 1.');
+    }
+    quantityInput.value = quantity;
+    updateTotalPrice();
 }
 
 function updateTotalPrice() {
     const quantity = parseInt(document.getElementById('product-quantity').value);
     const totalPrice = selectedProduct.price * quantity;
-    document.getElementById('total-price').textContent = formatRupiah(totalPrice);
+    document.getElementById('total-price').innerText = formatRupiah(totalPrice);
 }
 
-function changeQuantity(amount) {
-    const quantityInput = document.getElementById('product-quantity');
-    let currentQuantity = parseInt(quantityInput.value);
-    currentQuantity += amount;
-    if (currentQuantity < 1) {
-        currentQuantity = 1;
-    }
-    quantityInput.value = currentQuantity;
-    updateTotalPrice();
+function formatRupiah(number) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+    }).format(number);
 }
 
 function sendOrder() {
     const quantity = document.getElementById('product-quantity').value;
-    const total = document.getElementById('total-price').textContent;
-    const message = `Halo, saya ingin order produk ini:%0A%0A*Nama Produk:* ${selectedProduct.name}%0A*Jumlah:* ${quantity}%0A*Harga Total:* ${total}%0A%0ATerima kasih.`;
-    
-    const whatsappLink = `https://wa.me/${whatsappNumber}?text=${message}`;
-    window.open(whatsappLink, '_blank');
-    closeModal('product');
+    const total = document.getElementById('total-price').innerText;
+    const message = `Halo, saya ingin memesan produk:\n\n*Nama Produk:* ${selectedProduct.name}\n*Jumlah:* ${quantity}\n*Total Harga:* ${total}\n\nMohon petunjuk untuk pembayarannya.`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappNumber = '6283173814158';
+    const url = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    window.open(url, '_blank');
+    closeModal('product-modal');
+    showNotification('Pesanan terkirim via WhatsApp!', 'success');
 }
 
-window.onclick = function(event) {
-    if (event.target.classList.contains('modal')) {
-        event.target.classList.remove('show');
-    }
+function copyText(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Nomor berhasil disalin!', 'success');
+    }).catch(err => {
+        console.error('Gagal menyalin: ', err);
+        showNotification('Gagal menyalin nomor.', 'error');
+    });
 }
+
+function downloadImage(url, filename) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showNotification('Gambar berhasil diunduh!', 'success');
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification-area');
+    notification.innerText = message;
+    notification.classList.add('show');
+    
+    if (type === 'error') {
+        notification.style.backgroundColor = 'var(--danger-color)';
+    } else {
+        notification.style.backgroundColor = 'var(--success-color)';
+    }
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+const audio = document.getElementById('background-audio');
+const musicBtn = document.getElementById('musicToggleBtn');
+let isPlaying = false;
+
+musicBtn.addEventListener('click', () => {
+    if (isPlaying) {
+        audio.pause();
+        musicBtn.innerText = '▶';
+        showNotification('Musik dihentikan.', 'info');
+    } else {
+        audio.play().catch(e => console.error("Audio playback failed:", e));
+        musicBtn.innerText = '⏸';
+        showNotification('Musik diputar.', 'info');
+    }
+    isPlaying = !isPlaying;
+});
 
 document.addEventListener('DOMContentLoaded', () => {
-    const audio = document.getElementById('background-audio');
-    const musicToggleBtn = document.getElementById('musicToggleBtn');
-    let isPlaying = false;
-
-    musicToggleBtn.addEventListener('click', toggleAudio);
-
-    function toggleAudio() {
-        if (isPlaying) {
-            audio.pause();
-            musicToggleBtn.textContent = '▶';
-            musicToggleBtn.classList.add('paused');
-        } else {
-            audio.play();
-            musicToggleBtn.textContent = '⏸';
-            musicToggleBtn.classList.remove('paused');
-        }
-        isPlaying = !isPlaying;
+    const quantityInput = document.getElementById('product-quantity');
+    if (quantityInput) {
+        quantityInput.addEventListener('focus', (e) => {
+            e.target.blur();
+        });
     }
 });
