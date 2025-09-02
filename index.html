@@ -375,32 +375,7 @@
             -webkit-appearance: none;
             margin: 0;
         }
-        
-        .typing-container {
-            text-align: center;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 500;
-            color: var(--text-color);
-            min-height: 50px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
 
-        .typing-text {
-            border-right: 2px solid var(--highlight-color);
-            white-space: nowrap;
-            overflow: hidden;
-            display: inline-block;
-            vertical-align: bottom;
-            animation: blink-caret 0.75s step-end infinite;
-        }
-
-        @keyframes blink-caret {
-            from, to { border-color: transparent; }
-            50% { border-color: var(--highlight-color); }
-        }
-        
         .about-info-group {
             text-align: left;
             width: 100%;
@@ -408,12 +383,20 @@
             padding-top: 15px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         .about-info-group p {
             margin: 8px 0;
             font-weight: 500;
             color: var(--secondary-text-color);
             line-height: 1.5;
+        }
+        .about-info-group h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: var(--highlight-color);
+            text-align: center;
         }
 
         #notification-area {
@@ -460,11 +443,10 @@
             .order-button, .download-button { font-size: 1rem; }
             .product-img { width: 60px; height: 60px; }
             .product-title { font-size: 1.1rem; }
-            .typing-container { font-size: 1rem; }
         }
     </style>
 </head>
-<body onload="startTyping()">
+<body class="loaded">
 
 <div class="main-container-outer">
     <div class="main-container">
@@ -474,10 +456,8 @@
         <h1 class="profile-name">Kepforannas7hs</h1>
         <p class="header-subtitle">Official Hub for All Your Needs</p>
 
-        <div class="typing-container">
-            <p id="typing-text" class="typing-text"></p>
-        </div>
         <div class="about-info-group">
+            <h3>Informasi Tentang Saya</h3>
             <p><strong>Nama:</strong> Kepforannas7hs</p>
             <p><strong>Profesi:</strong> Developer Pemula yang Keren</p>
             <p><strong>Keahlian:</strong> Desain UI/UX, Frontend Development (HTML, CSS, JavaScript dasar)</p>
@@ -497,10 +477,10 @@
             <img src="https://files.catbox.moe/nef57i.png" alt="Shop Icon" class="link-icon"> Lihat Produk
         </button>
         
-        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="link-button" style="background-color: var(--tiktok-color); box-shadow: var(--tiktok-shadow);">
+        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="link-button">
             <img src="https://files.catbox.moe/thdekj.png" alt="TikTok Icon" class="link-icon"> TikTok
         </a>
-        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="link-button" style="background-color: var(--telegram-color); box-shadow: var(--telegram-shadow);">
+        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="link-button">
             <img src="https://files.catbox.moe/w2z0l9.png" alt="Telegram Icon" class="link-icon"> Telegram
         </a>
     </div>
@@ -671,34 +651,6 @@
         window.open(telegramLink, '_blank');
         closeModal('product-modal');
         showNotification('Pesanan berhasil dikirim!');
-    }
-
-    const textToType = 'Kepforannas7hs adalah seorang developer pemula yang keren!';
-    const typingElement = document.getElementById('typing-text');
-    let charIndex = 0;
-
-    function startTyping() {
-        typeWriter();
-    }
-
-    function typeWriter() {
-        if (charIndex < textToType.length) {
-            typingElement.textContent += textToType.charAt(charIndex);
-            charIndex++;
-            setTimeout(typeWriter, 50);
-        } else {
-            setTimeout(eraseText, 2000);
-        }
-    }
-
-    function eraseText() {
-        if (charIndex > 0) {
-            typingElement.textContent = textToType.substring(0, charIndex - 1);
-            charIndex--;
-            setTimeout(eraseText, 20);
-        } else {
-            setTimeout(typeWriter, 500);
-        }
     }
     
     function copyText(text) {
