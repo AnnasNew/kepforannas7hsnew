@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kepforannas7hs - Payment</title>
+    <title>Kepforannas7hs - Official Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://files.catbox.moe/piai0a.jpg" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -15,11 +15,10 @@
             --secondary-text-color: #a0a0a0;
             --highlight-color: #4CAF50;
             --modal-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-            --gradient-1: linear-gradient(135deg, #4CAF50, #2E7D32);
-            --gradient-2: linear-gradient(135deg, #00C6FF, #0072FF);
-            --gradient-3: linear-gradient(135deg, #FF5722, #FF8A65);
-            --gradient-4: linear-gradient(135deg, #7B1FA2, #AF52C5);
-            --gradient-5: linear-gradient(135deg, #FBC02D, #FFD54F);
+            --tiktok-color: #000000;
+            --telegram-color: #21a9e1;
+            --tiktok-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            --telegram-shadow: 0 8px 25px rgba(33, 169, 225, 0.5);
         }
 
         body {
@@ -164,15 +163,21 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        .link-button-social {
-            background: var(--gradient-1);
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        .link-button.tiktok-btn {
+            background-color: var(--tiktok-color);
+        }
+        .link-button.tiktok-btn:hover {
+            box-shadow: var(--tiktok-shadow);
+            background-color: #1a1a1a;
         }
 
-        .link-button-social:nth-of-type(2) { background: var(--gradient-2); }
-        .link-button-social:nth-of-type(3) { background: var(--gradient-3); }
-        .link-button-social:nth-of-type(4) { background: var(--gradient-4); }
+        .link-button.telegram-btn {
+            background-color: var(--telegram-color);
+        }
+        .link-button.telegram-btn:hover {
+            box-shadow: var(--telegram-shadow);
+            background-color: #1c90c7;
+        }
 
         .modal {
             display: none;
@@ -409,6 +414,20 @@
             from, to { border-color: transparent; }
             50% { border-color: var(--highlight-color); }
         }
+        
+        .about-info-group {
+            text-align: left;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .about-info-group p {
+            margin: 8px 0;
+            font-weight: 500;
+            color: var(--secondary-text-color);
+            line-height: 1.5;
+        }
 
         #notification-area {
             position: fixed;
@@ -481,10 +500,10 @@
             <img src="https://files.catbox.moe/nef57i.png" alt="Shop Icon" class="link-icon"> Lihat Produk
         </button>
         
-        <button class="link-button link-button-social" onclick="openModal('tiktok-modal')">
+        <button class="link-button tiktok-btn" onclick="openModal('tiktok-modal')">
             <img src="https://files.catbox.moe/thdekj.png" alt="TikTok Icon" class="link-icon"> TikTok
         </button>
-        <button class="link-button link-button-social" onclick="openModal('telegram-modal')">
+        <button class="link-button telegram-btn" onclick="openModal('telegram-modal')">
             <img src="https://files.catbox.moe/w2z0l9.png" alt="Telegram Icon" class="link-icon"> Telegram
         </button>
         
@@ -561,7 +580,7 @@
                 <span class="info-value">@kepforannas7hs</span>
             </div>
         </div>
-        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="order-button" style="background-color: #000000;">
+        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="order-button tiktok-btn">
             <i class="fab fa-tiktok"></i> Kunjungi Profil
         </a>
     </div>
@@ -577,7 +596,7 @@
                 <span class="info-value">Telegram Me</span>
             </div>
         </div>
-        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="order-button" style="background-color: #21a9e1;">
+        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="order-button telegram-btn">
             <i class="fab fa-telegram-plane"></i> Kunjungi Profil
         </a>
     </div>
@@ -646,11 +665,11 @@
         <div class="typing-container">
             <p id="typing-text" class="typing-text"></p>
         </div>
-        <div style="margin-top: 20px; text-align: left;">
-            <p style="color: var(--secondary-text-color);">Nama: Kepforannas7hs</p>
-            <p style="color: var(--secondary-text-color);">Profesi: Developer Pemula</p>
-            <p style="color: var(--secondary-text-color);">Keahlian: HTML, CSS, JavaScript dasar</p>
-            <p style="color: var(--secondary-text-color);">Misi: Membangun website yang modern dan fungsional dengan desain yang keren.</p>
+        <div class="about-info-group">
+            <p><strong>Nama:</strong> Kepforannas7hs</p>
+            <p><strong>Profesi:</strong> Developer Pemula yang Keren</p>
+            <p><strong>Keahlian:</strong> Desain UI/UX, Frontend Development (HTML, CSS, JavaScript dasar)</p>
+            <p><strong>Misi:</strong> Membangun website yang tidak hanya berfungsi tetapi juga memiliki tampilan yang modern dan menarik. Terus belajar dan bereksperimen dengan teknologi web terbaru.</p>
         </div>
     </div>
 </div>
@@ -709,7 +728,7 @@
         showNotification('Pesanan berhasil dikirim!');
     }
 
-    const textToType = 'kepforannas7hs adalah seorang developer pemula yang belajar';
+    const textToType = 'Kepforannas7hs adalah seorang developer pemula yang keren!';
     const typingElement = document.getElementById('typing-text');
     let charIndex = 0;
     let isTyping = false;
