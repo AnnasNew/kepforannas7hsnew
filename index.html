@@ -163,22 +163,6 @@
             transform: scale(1.1) rotate(5deg);
         }
 
-        .link-button.tiktok-btn {
-            background-color: var(--tiktok-color);
-        }
-        .link-button.tiktok-btn:hover {
-            box-shadow: var(--tiktok-shadow);
-            background-color: #1a1a1a;
-        }
-
-        .link-button.telegram-btn {
-            background-color: var(--telegram-color);
-        }
-        .link-button.telegram-btn:hover {
-            box-shadow: var(--telegram-shadow);
-            background-color: #1c90c7;
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -213,7 +197,7 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        #product-modal .modal-content, #about-modal .modal-content {
+        #product-modal .modal-content {
             max-width: 380px;
             padding: 25px;
         }
@@ -399,6 +383,8 @@
             font-weight: 500;
             color: var(--text-color);
             min-height: 50px;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         .typing-text {
@@ -417,7 +403,8 @@
         
         .about-info-group {
             text-align: left;
-            margin-top: 20px;
+            width: 100%;
+            margin-bottom: 40px;
             padding-top: 15px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -469,7 +456,7 @@
             .link-icon { width: 30px; height: 30px; margin-right: 10px; }
             .modal-content { padding: 20px; max-width: 90%; }
             .modal-title { font-size: 1.6rem; }
-            #product-modal .modal-content, #about-modal .modal-content { max-width: 90%; }
+            #product-modal .modal-content { max-width: 90%; }
             .order-button, .download-button { font-size: 1rem; }
             .product-img { width: 60px; height: 60px; }
             .product-title { font-size: 1.1rem; }
@@ -477,7 +464,7 @@
         }
     </style>
 </head>
-<body class="loaded">
+<body onload="startTyping()">
 
 <div class="main-container-outer">
     <div class="main-container">
@@ -486,6 +473,16 @@
         </div>
         <h1 class="profile-name">Kepforannas7hs</h1>
         <p class="header-subtitle">Official Hub for All Your Needs</p>
+
+        <div class="typing-container">
+            <p id="typing-text" class="typing-text"></p>
+        </div>
+        <div class="about-info-group">
+            <p><strong>Nama:</strong> Kepforannas7hs</p>
+            <p><strong>Profesi:</strong> Developer Pemula yang Keren</p>
+            <p><strong>Keahlian:</strong> Desain UI/UX, Frontend Development (HTML, CSS, JavaScript dasar)</p>
+            <p><strong>Misi:</strong> Membangun website yang tidak hanya berfungsi tetapi juga memiliki tampilan yang modern dan menarik. Terus belajar dan bereksperimen dengan teknologi web terbaru.</p>
+        </div>
 
         <button class="link-button" onclick="openModal('qris-modal')">
             <img src="https://files.catbox.moe/dmat3t.png" alt="QRIS Icon" class="link-icon"> QRIS
@@ -500,16 +497,12 @@
             <img src="https://files.catbox.moe/nef57i.png" alt="Shop Icon" class="link-icon"> Lihat Produk
         </button>
         
-        <button class="link-button tiktok-btn" onclick="openModal('tiktok-modal')">
+        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="link-button" style="background-color: var(--tiktok-color); box-shadow: var(--tiktok-shadow);">
             <img src="https://files.catbox.moe/thdekj.png" alt="TikTok Icon" class="link-icon"> TikTok
-        </button>
-        <button class="link-button telegram-btn" onclick="openModal('telegram-modal')">
+        </a>
+        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="link-button" style="background-color: var(--telegram-color); box-shadow: var(--telegram-shadow);">
             <img src="https://files.catbox.moe/w2z0l9.png" alt="Telegram Icon" class="link-icon"> Telegram
-        </button>
-        
-        <button class="link-button" style="margin-top: 30px;" onclick="openAboutModal()">
-            <img src="https://files.catbox.moe/piai0a.jpg" alt="About Icon" class="link-icon"> Informasi Tentang Saya
-        </button>
+        </a>
     </div>
 </div>
 
@@ -570,38 +563,6 @@
     </div>
 </div>
 
-<div id="tiktok-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('tiktok-modal')">&times;</span>
-        <h2 class="modal-title">TikTok</h2>
-        <div class="modal-info-group">
-            <div class="info-item">
-                <span class="info-label">Username:</span>
-                <span class="info-value">@kepforannas7hs</span>
-            </div>
-        </div>
-        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="order-button tiktok-btn">
-            <i class="fab fa-tiktok"></i> Kunjungi Profil
-        </a>
-    </div>
-</div>
-
-<div id="telegram-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('telegram-modal')">&times;</span>
-        <h2 class="modal-title">Telegram</h2>
-        <div class="modal-info-group">
-            <div class="info-item">
-                <span class="info-label">Username:</span>
-                <span class="info-value">Telegram Me</span>
-            </div>
-        </div>
-        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="order-button telegram-btn">
-            <i class="fab fa-telegram-plane"></i> Kunjungi Profil
-        </a>
-    </div>
-</div>
-
 <div id="shop-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('shop-modal')">&times;</span>
@@ -654,22 +615,6 @@
             <button class="order-button" onclick="sendOrder()">
                 <i class="fab fa-telegram-plane"></i> Order Sekarang
             </button>
-        </div>
-    </div>
-</div>
-
-<div id="about-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('about-modal')">&times;</span>
-        <h2 class="modal-title">Informasi Tentang Saya</h2>
-        <div class="typing-container">
-            <p id="typing-text" class="typing-text"></p>
-        </div>
-        <div class="about-info-group">
-            <p><strong>Nama:</strong> Kepforannas7hs</p>
-            <p><strong>Profesi:</strong> Developer Pemula yang Keren</p>
-            <p><strong>Keahlian:</strong> Desain UI/UX, Frontend Development (HTML, CSS, JavaScript dasar)</p>
-            <p><strong>Misi:</strong> Membangun website yang tidak hanya berfungsi tetapi juga memiliki tampilan yang modern dan menarik. Terus belajar dan bereksperimen dengan teknologi web terbaru.</p>
         </div>
     </div>
 </div>
@@ -731,7 +676,10 @@
     const textToType = 'Kepforannas7hs adalah seorang developer pemula yang keren!';
     const typingElement = document.getElementById('typing-text');
     let charIndex = 0;
-    let isTyping = false;
+
+    function startTyping() {
+        typeWriter();
+    }
 
     function typeWriter() {
         if (charIndex < textToType.length) {
@@ -750,16 +698,6 @@
             setTimeout(eraseText, 20);
         } else {
             setTimeout(typeWriter, 500);
-        }
-    }
-    
-    function openAboutModal() {
-        openModal('about-modal');
-        if (!isTyping) {
-            isTyping = true;
-            typingElement.textContent = '';
-            charIndex = 0;
-            typeWriter();
         }
     }
     
