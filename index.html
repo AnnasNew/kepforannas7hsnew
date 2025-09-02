@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kepforannas7hs - Official Hub</title>
+    <title>Kepforannas7hs - Payment</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://files.catbox.moe/piai0a.jpg" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -15,6 +15,11 @@
             --secondary-text-color: #a0a0a0;
             --highlight-color: #4CAF50;
             --modal-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            --gradient-1: linear-gradient(135deg, #4CAF50, #2E7D32);
+            --gradient-2: linear-gradient(135deg, #00C6FF, #0072FF);
+            --gradient-3: linear-gradient(135deg, #FF5722, #FF8A65);
+            --gradient-4: linear-gradient(135deg, #7B1FA2, #AF52C5);
+            --gradient-5: linear-gradient(135deg, #FBC02D, #FFD54F);
         }
 
         body {
@@ -159,6 +164,16 @@
             transform: scale(1.1) rotate(5deg);
         }
 
+        .link-button-social {
+            background: var(--gradient-1);
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .link-button-social:nth-of-type(2) { background: var(--gradient-2); }
+        .link-button-social:nth-of-type(3) { background: var(--gradient-3); }
+        .link-button-social:nth-of-type(4) { background: var(--gradient-4); }
+
         .modal {
             display: none;
             position: fixed;
@@ -267,6 +282,10 @@
             cursor: pointer;
             transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
             margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .order-button:hover, .download-button:hover {
@@ -461,10 +480,11 @@
         <button class="link-button" onclick="openModal('shop-modal')">
             <img src="https://files.catbox.moe/nef57i.png" alt="Shop Icon" class="link-icon"> Lihat Produk
         </button>
-        <button class="link-button" onclick="openModal('tiktok-modal')">
+        
+        <button class="link-button link-button-social" onclick="openModal('tiktok-modal')">
             <img src="https://files.catbox.moe/thdekj.png" alt="TikTok Icon" class="link-icon"> TikTok
         </button>
-        <button class="link-button" onclick="openModal('telegram-modal')">
+        <button class="link-button link-button-social" onclick="openModal('telegram-modal')">
             <img src="https://files.catbox.moe/w2z0l9.png" alt="Telegram Icon" class="link-icon"> Telegram
         </button>
         
@@ -485,7 +505,9 @@
                 <span class="info-value">Scan kode QR ini untuk pembayaran.</span>
             </div>
         </div>
-        <button class="download-button" onclick="downloadImage('https://files.catbox.moe/cmgq0k.jpg', 'QRIS_Kepforannas7hs.jpg')">Unduh QR</button>
+        <button class="download-button" onclick="downloadImage('https://files.catbox.moe/cmgq0k.jpg', 'QRIS_Kepforannas7hs.jpg')">
+            <i class="fas fa-download"></i> Unduh QR
+        </button>
     </div>
 </div>
 
@@ -503,7 +525,9 @@
                 <span class="info-value">Kepforannas7hsA</span>
             </div>
         </div>
-        <button class="order-button" onclick="copyText('083173814158')">Salin Nomor</button>
+        <button class="order-button" onclick="copyText('083173814158')">
+            <i class="fas fa-copy"></i> Salin Nomor
+        </button>
     </div>
 </div>
 
@@ -521,7 +545,9 @@
                 <span class="info-value">Kepforannas7hsA</span>
             </div>
         </div>
-        <button class="order-button" onclick="copyText('083173814158')">Salin Nomor</button>
+        <button class="order-button" onclick="copyText('083173814158')">
+            <i class="fas fa-copy"></i> Salin Nomor
+        </button>
     </div>
 </div>
 
@@ -535,7 +561,9 @@
                 <span class="info-value">@kepforannas7hs</span>
             </div>
         </div>
-        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="order-button" style="background-color: #000000;">Kunjungi Profil</a>
+        <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" class="order-button" style="background-color: #000000;">
+            <i class="fab fa-tiktok"></i> Kunjungi Profil
+        </a>
     </div>
 </div>
 
@@ -549,7 +577,9 @@
                 <span class="info-value">Telegram Me</span>
             </div>
         </div>
-        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="order-button" style="background-color: #21a9e1;">Kunjungi Profil</a>
+        <a href="https://t.me/Alpooooooofoluv" target="_blank" class="order-button" style="background-color: #21a9e1;">
+            <i class="fab fa-telegram-plane"></i> Kunjungi Profil
+        </a>
     </div>
 </div>
 
@@ -602,7 +632,9 @@
                 <span class="info-label">Total Harga:</span>
                 <span id="total-price" class="info-value"></span>
             </div>
-            <button class="order-button" onclick="sendOrder()">Order Sekarang</button>
+            <button class="order-button" onclick="sendOrder()">
+                <i class="fab fa-telegram-plane"></i> Order Sekarang
+            </button>
         </div>
     </div>
 </div>
@@ -613,6 +645,12 @@
         <h2 class="modal-title">Informasi Tentang Saya</h2>
         <div class="typing-container">
             <p id="typing-text" class="typing-text"></p>
+        </div>
+        <div style="margin-top: 20px; text-align: left;">
+            <p style="color: var(--secondary-text-color);">Nama: Kepforannas7hs</p>
+            <p style="color: var(--secondary-text-color);">Profesi: Developer Pemula</p>
+            <p style="color: var(--secondary-text-color);">Keahlian: HTML, CSS, JavaScript dasar</p>
+            <p style="color: var(--secondary-text-color);">Misi: Membangun website yang modern dan fungsional dengan desain yang keren.</p>
         </div>
     </div>
 </div>
@@ -675,7 +713,6 @@
     const typingElement = document.getElementById('typing-text');
     let charIndex = 0;
     let isTyping = false;
-    let typingInterval = null;
 
     function typeWriter() {
         if (charIndex < textToType.length) {
