@@ -6,6 +6,7 @@
     <title>Kepforannas7hs - Official Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://files.catbox.moe/piai0a.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         /* ==================== GLOBAL STYLES ==================== */
         :root {
@@ -775,6 +776,24 @@
                 </div>
                 <audio id="music5" src="https://files.catbox.moe/2s97w2.mp3"></audio>
             </div>
+            
+            <div class="music-item">
+                <div class="music-header">
+                    <img src="https://i.ytimg.com/vi/a_fKkXnNnLw/hq720.jpg" alt="Thumbnail Lagu Baru" class="music-thumbnail">
+                    <div class="music-details">
+                        <span class="music-title">Judul Lagu Baru</span>
+                        <span class="music-artist">Nama Artis Baru</span>
+                    </div>
+                </div>
+                <div class="music-controls-player">
+                    <button class="music-play-pause-btn" data-audio-id="music6">▶</button>
+                    <div class="music-progress-container" data-audio-id="music6">
+                        <div class="music-progress-bar"></div>
+                    </div>
+                    <span class="music-time" id="music6-time">0:00 / 0:00</span>
+                </div>
+                <audio id="music6" src="https://www.contohurlmusik.com/lagu_keren.mp3"></audio>
+            </div>
         </div>
     </div>
 </div>
@@ -860,7 +879,7 @@
             const progressBar = currentlyPlayingAudio.closest('.music-item').querySelector('.music-progress-bar');
             if (progressBar) progressBar.style.width = '0%';
             const timeSpan = currentlyPlayingAudio.closest('.music-item').querySelector('.music-time');
-            if (timeSpan) timeSpan.innerText = `0:00 / ${formatTime(currentlyPlayingAudio.duration || 0)}`;
+            if (timeSpan) timeSpan.innerText = `0:00 / 0:00`; // Reset time display
         }
         currentlyPlayingAudio = null;
         currentlyPlayingButton = null;
@@ -880,7 +899,7 @@
 
         // Update progress bar and time
         progressUpdateInterval = setInterval(() => {
-            if (audioElement.duration) {
+            if (audioElement.duration && !isNaN(audioElement.duration)) {
                 const progress = (audioElement.currentTime / audioElement.duration) * 100;
                 progressBar.style.width = `${progress}%`;
                 timeSpan.innerText = `${formatTime(audioElement.currentTime)} / ${formatTime(audioElement.duration)}`;
@@ -893,6 +912,7 @@
 
         // Seek functionality
         progressContainer.onclick = (e) => {
+            if (!audioElement.duration || isNaN(audioElement.duration)) return;
             const rect = progressContainer.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const width = rect.width;
@@ -902,14 +922,18 @@
 
         // Initial duration display
         audioElement.onloadedmetadata = () => {
-            timeSpan.innerText = `0:00 / ${formatTime(audioElement.duration)}`;
+            if (audioElement.duration && !isNaN(audioElement.duration)) {
+                timeSpan.innerText = `0:00 / ${formatTime(audioElement.duration)}`;
+            } else {
+                timeSpan.innerText = `0:00 / 0:00`;
+            }
         };
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.music-play-pause-btn').forEach(button => {
             button.addEventListener('click', () => {
-                const audioId = button.dataset.audioId;
+                const audioId = button.dataset.audio-id;
                 const audioElement = document.getElementById(audioId);
                 
                 if (audioElement === currentlyPlayingAudio && !audioElement.paused) {
@@ -931,7 +955,7 @@
         document.querySelectorAll('audio').forEach(audio => {
             audio.onloadedmetadata = () => {
                 const timeSpan = audio.closest('.music-item').querySelector('.music-time');
-                if (timeSpan) {
+                if (timeSpan && audio.duration && !isNaN(audio.duration)) {
                     timeSpan.innerText = `0:00 / ${formatTime(audio.duration)}`;
                 }
             };
