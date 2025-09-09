@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Repot by Kepforannas7hs</title>
+<title>Repwa by kepforannas7hs</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -16,6 +16,9 @@
     --text-color: #e0e0e0;
     --log-bg: rgba(0, 0, 0, 0.5);
     --log-text: #00ff6a;
+    --success-color: #00ff6a;
+    --error-color: #ff3b5b;
+    --warning-color: #ffc107;
   }
 
   * {
@@ -33,6 +36,8 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
+    position: relative;
+    overflow-y: auto;
   }
 
   .dashboard-container {
@@ -45,6 +50,7 @@
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-color);
     animation: fadeIn 1s ease-in-out;
+    margin-bottom: 20px;
   }
 
   @keyframes fadeIn {
@@ -54,9 +60,15 @@
 
   h1 {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  }
+
+  h2 {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
   }
 
   .section {
@@ -89,6 +101,7 @@
     background: rgba(255, 255, 255, 0.3);
     border-color: #fff;
     outline: none;
+    box-shadow: 0 0 10px var(--secondary-color);
   }
 
   button {
@@ -104,6 +117,7 @@
     background: var(--primary-color);
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     animation: none;
+    transform: translateY(-2px);
   }
 
   @keyframes pulse {
@@ -121,9 +135,9 @@
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid var(--border-color);
   }
-  .status-info.connected { color: #00ff6a; }
-  .status-info.disconnected { color: #ff3b5b; }
-  .status-info.connecting { color: #ffc107; }
+  .status-info.connected { color: var(--success-color); }
+  .status-info.disconnected { color: var(--error-color); }
+  .status-info.connecting { color: var(--warning-color); }
 
   hr {
     border: none;
@@ -152,21 +166,58 @@
     border-color: var(--log-text);
     box-shadow: 0 0 15px rgba(0, 255, 106, 0.3);
   }
+
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+    z-index: 1000;
+    min-width: 250px;
+    text-align: center;
+  }
+
+  .notification.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .notification.success { border-left: 5px solid var(--success-color); }
+  .notification.error { border-left: 5px solid var(--error-color); }
+  .notification.info { border-left: 5px solid var(--warning-color); }
+
+  @media (max-width: 600px) {
+    body {
+      padding: 10px;
+      align-items: flex-start;
+    }
+    .dashboard-container {
+      padding: 20px;
+    }
+  }
 </style>
 </head>
 <body>
   <div class="dashboard-container">
-    <h1>WhatsApp Bot Dashboard</h1>
+    <h1>WhatsApp Bot</h1>
+    <h2>Project kepforannas7hs</h2>
 
     <div class="section">
       <label for="botNumber">Nomor Bot (contoh: 6281234567890)</label>
       <input id="botNumber" placeholder="Masukkan nomor bot" />
-      <button id="btnPair">Request Pairing Code</button>
+      <button id="btnPair">Minta Kode Pairing</button>
       <p id="pairingCode" class="pairing-code">Menunggu kode pairing...</p>
     </div>
 
     <div class="section">
-      <button id="btnConnect">Connect Bot</button>
+      <button id="btnConnect">Sambungkan Bot</button>
       <p id="status" class="status-info disconnected">Status: Disconnected</p>
     </div>
 
@@ -176,11 +227,11 @@
       <label for="targetNumber">Nomor Target (contoh: 6289876543210)</label>
       <input id="targetNumber" placeholder="Masukkan nomor target" />
 
-      <label for="reportTimes">Jumlah Report</label>
+      <label for="reportTimes">Jumlah Laporan</label>
       <input id="reportTimes" type="number" min="1" max="50" value="5" />
 
-      <button id="btnReport">Kirim Report</button>
-      <p id="reportResult" class="report-result">Hasil report akan muncul di sini.</p>
+      <button id="btnReport">Kirim Laporan</button>
+      <p id="reportResult" class="report-result">Hasil laporan akan muncul di sini.</p>
     </div>
 
     <div class="log-container">
@@ -189,103 +240,132 @@
     </div>
   </div>
 
-<script src="https://<domain_panel_hosting_anda>/socket.io/socket.io.js"></script>
-<script>
-  const serverUrl = "https://<domain_panel_hosting_anda>";
-  const socket = io(serverUrl);
+  <script src="https://repwawebsitebykepforannas.netlify.app/socket.io/socket.io.js"></script>
+  <script>
+    const serverUrl = "https://repwawebsitebykepforannas.netlify.app";
+    const socket = io(serverUrl);
 
-  const botNumberInput = document.getElementById('botNumber');
-  const btnPair = document.getElementById('btnPair');
-  const pairingCodeP = document.getElementById('pairingCode');
-  const btnConnect = document.getElementById('btnConnect');
-  const statusP = document.getElementById('status');
-  const targetNumberInput = document.getElementById('targetNumber');
-  const reportTimesInput = document.getElementById('reportTimes');
-  const btnReport = document.getElementById('btnReport');
-  const reportResultP = document.getElementById('reportResult');
-  const logArea = document.getElementById('logArea');
+    const botNumberInput = document.getElementById('botNumber');
+    const btnPair = document.getElementById('btnPair');
+    const pairingCodeP = document.getElementById('pairingCode');
+    const btnConnect = document.getElementById('btnConnect');
+    const statusP = document.getElementById('status');
+    const targetNumberInput = document.getElementById('targetNumber');
+    const reportTimesInput = document.getElementById('reportTimes');
+    const btnReport = document.getElementById('btnReport');
+    const reportResultP = document.getElementById('reportResult');
+    const logArea = document.getElementById('logArea');
 
-  function updateStatus(status, connected = false) {
-    statusP.textContent = `Status: ${status}`;
-    statusP.className = 'status-info';
-    if (connected) {
-      statusP.classList.add('connected');
-    } else {
-      statusP.classList.add('disconnected');
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.classList.add('notification', type);
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.classList.add('show'), 100);
+      setTimeout(() => {
+        notification.classList.remove('show');
+        notification.addEventListener('transitionend', () => notification.remove());
+      }, 5000);
     }
-    if (status === 'Connecting...' || status === 'Reconnecting...') {
-      statusP.classList.add('connecting');
-    }
-  }
 
-  btnPair.onclick = async () => {
-    const botNumber = botNumberInput.value.trim();
-    if (!botNumber) {
-      alert('Masukkan nomor bot!');
-      return;
-    }
-    pairingCodeP.textContent = 'Meminta kode pairing...';
-    try {
-      const res = await fetch(`${serverUrl}/pair`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ botNumber }),
-      });
-      const data = await res.json();
-      if (data.pairingCode) {
-        pairingCodeP.textContent = `Kode Pairing: ${data.pairingCode}`;
+    function updateStatus(status, connected = false) {
+      statusP.textContent = `Status: ${status}`;
+      statusP.className = 'status-info';
+      if (connected) {
+        statusP.classList.add('connected');
       } else {
-        pairingCodeP.textContent = `Error: ${data.error || 'Tidak diketahui'}`;
+        statusP.classList.add('disconnected');
       }
-    } catch (e) {
-      pairingCodeP.textContent = 'Error jaringan: ' + e.message;
-    }
-  };
-
-  btnConnect.onclick = () => {
-    const botNumber = botNumberInput.value.trim();
-    if (!botNumber) {
-      alert('Masukkan nomor bot!');
-      return;
-    }
-    updateStatus('Connecting...');
-    socket.emit('connectBot', { botNumber });
-  };
-
-  btnReport.onclick = async () => {
-    const botNumber = botNumberInput.value.trim();
-    const targetNumber = targetNumberInput.value.trim();
-    const times = parseInt(reportTimesInput.value);
-    if (!botNumber || !targetNumber || !times || times <= 0) {
-      alert('Isi semua field dengan benar!');
-      return;
-    }
-    reportResultP.textContent = 'Mengirim report...';
-    try {
-      const res = await fetch(`${serverUrl}/report`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ botNumber, targetNumber, times }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        reportResultP.textContent = data.message;
-      } else {
-        reportResultP.textContent = `Error: ${data.error || 'Tidak diketahui'}`;
+      if (status === 'Connecting...' || status === 'Reconnecting...') {
+        statusP.classList.add('connecting');
       }
-    } catch (e) {
-      reportResultP.textContent = `Error jaringan: ${e.message}`;
     }
-  };
 
-  socket.on('status', ({ status, connected }) => {
-    updateStatus(status, connected);
-  });
+    btnPair.onclick = async () => {
+      const botNumber = botNumberInput.value.trim();
+      if (!botNumber) {
+        showNotification('Mohon masukkan nomor bot terlebih dahulu.', 'error');
+        return;
+      }
+      pairingCodeP.textContent = 'Meminta kode pairing...';
+      showNotification('Memulai permintaan kode pairing...', 'info');
+      try {
+        const res = await fetch(`${serverUrl}/pair`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ botNumber }),
+        });
+        const data = await res.json();
+        if (data.pairingCode) {
+          pairingCodeP.textContent = `Kode Pairing: ${data.pairingCode}`;
+          showNotification('Kode pairing berhasil didapat! Silakan gunakan kode ini untuk menyambungkan perangkat.', 'success');
+        } else {
+          pairingCodeP.textContent = `Error: ${data.error || 'Tidak diketahui'}`;
+          showNotification(`Gagal mendapatkan kode pairing: ${data.error}`, 'error');
+        }
+      } catch (e) {
+        pairingCodeP.textContent = 'Error jaringan: ' + e.message;
+        showNotification(`Terjadi kesalahan jaringan: ${e.message}`, 'error');
+      }
+    };
 
-  socket.on('log', (msg) => {
-    logArea.value += new Date().toLocaleTimeString() + ': ' + msg + '\n';
-    logArea.scrollTop = logArea.scrollHeight;
-  });
-</script>
+    btnConnect.onclick = () => {
+      const botNumber = botNumberInput.value.trim();
+      if (!botNumber) {
+        showNotification('Mohon masukkan nomor bot untuk disambungkan.', 'error');
+        return;
+      }
+      updateStatus('Connecting...');
+      showNotification('Memulai proses koneksi bot...', 'info');
+      socket.emit('connectBot', { botNumber });
+    };
+
+    btnReport.onclick = async () => {
+      const botNumber = botNumberInput.value.trim();
+      const targetNumber = targetNumberInput.value.trim();
+      const times = parseInt(reportTimesInput.value);
+      if (!botNumber || !targetNumber || !times || times <= 0) {
+        showNotification('Pastikan semua data terisi dengan benar.', 'error');
+        return;
+      }
+      reportResultP.textContent = 'Mengirim laporan...';
+      showNotification(`Mengirim ${times} laporan otomatis ke nomor ${targetNumber}...`, 'info');
+      try {
+        const res = await fetch(`${serverUrl}/report`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ botNumber, targetNumber, times }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          reportResultP.textContent = data.message;
+          showNotification(data.message, 'success');
+        } else {
+          reportResultP.textContent = `Error: ${data.error || 'Tidak diketahui'}`;
+          showNotification(`Gagal mengirim laporan: ${data.error}`, 'error');
+        }
+      } catch (e) {
+        reportResultP.textContent = `Error jaringan: ${e.message}`;
+        showNotification(`Terjadi kesalahan jaringan saat mengirim laporan: ${e.message}`, 'error');
+      }
+    };
+
+    socket.on('status', ({ status, connected }) => {
+      updateStatus(status, connected);
+      if (status === 'Connected') {
+        showNotification('Bot berhasil terhubung!', 'success');
+      } else if (status === 'Disconnected') {
+        showNotification('Bot terputus, mencoba menyambung kembali...', 'warning');
+      } else if (status === 'Logged out') {
+        showNotification('Bot telah keluar, silakan hubungkan kembali.', 'error');
+      }
+    });
+
+    socket.on('log', (msg) => {
+      logArea.value += new Date().toLocaleTimeString() + ': ' + msg + '\n';
+      logArea.scrollTop = logArea.scrollHeight;
+    });
+  </script>
 </body>
 </html>
+

@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://repwawebsitebykepforannas.netlify.app/", // Ganti dengan domain Netlify Anda
+    origin: "https://repwawebsitebykepforannas.netlify.app",
     methods: ["GET", "POST"]
   }
 });
@@ -25,7 +25,7 @@ const sessions = new Map();
 
 app.use(express.json());
 app.use(cors({
-  origin: "https://repotwanew.netlify.app" // Ganti dengan domain Netlify Anda
+  origin: "https://repwawebsitebykepforannas.netlify.app"
 }));
 
 function log(socket, message) {
@@ -192,3 +192,4 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
