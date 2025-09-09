@@ -15,7 +15,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://repotwanew.netlify.app", // Ganti dengan domain Netlify Anda
+    origin: "https://repwawebsitebykepforannas.netlify.app/", // Ganti dengan domain Netlify Anda
     methods: ["GET", "POST"]
   }
 });
