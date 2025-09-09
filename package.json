@@ -12,6 +12,7 @@
     "chalk": "^4.1.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "node-fetch": "^2.6.1",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.2.0",
     "js-confuser": "1.7.3",
