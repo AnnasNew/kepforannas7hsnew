@@ -10,26 +10,34 @@ const {
 const P = require('pino');
 const fs = require('fs-extra');
 const path = require('path');
+const os = require('os');
+const readline = require('readline');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://repwawebsitebykepforannas.netlify.app",
+    origin: ["https://repwawebsitebykepforannas.netlify.app", "https://repwawebsitebykepforannas.netlify.app", "http://localhost:3000"],
     methods: ["GET", "POST"]
   }
 });
 
 const SESSIONS_DIR = './sessions';
 const sessions = new Map();
+let botStartTime = Date.now();
 
 app.use(express.json());
-app.use(cors({
-  origin: "https://repwawebsitebykepforannas.netlify.app"
-}));
+app.use(cors({ origin: ["https://repotwanew.netlify.app", "https://repwawebsitebykepforannas.netlify.app", "http://localhost:3000"] }));
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
 function log(socket, message) {
-  socket.emit('log', message);
+  if (socket) {
+    socket.emit('log', message);
+  }
   console.log(message);
 }
 
@@ -39,7 +47,33 @@ function createSessionDir(botNumber) {
   return dir;
 }
 
-async function connectBot(botNumber, socket) {
+function getUptime() {
+  const diff = Date.now() - botStartTime;
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+  return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+function sendSystemStatus(socket) {
+  const totalMem = os.totalmem();
+  const freeMem = os.freemem();
+  const usedMem = totalMem - freeMem;
+
+  // Placeholder for disk usage. In a real app, you would use a library like 'disk-usage'
+  const diskTotal = 1000;
+  const diskUsed = 250;
+
+  const statusData = {
+    cpuLoad: (os.loadavg()[0] * 10).toFixed(1),
+    uptime: getUptime(),
+    memory: `${(usedMem / 1024 / 1024).toFixed(2)} / ${(totalMem / 1024 / 1024).toFixed(2)} MiB`,
+    disk: `${diskUsed} / ${diskTotal} GiB`
+  };
+  socket.emit('system-status', statusData);
+}
+
+async function startBot(botNumber) {
   const sessionDir = createSessionDir(botNumber);
   const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
 
@@ -49,29 +83,46 @@ async function connectBot(botNumber, socket) {
     logger: P({ level: 'silent' }),
   });
 
-  sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect, qr } = update;
+  const getSocket = () => {
+    let connectedSocket = null;
+    for (const [id, s] of Object.entries(io.sockets.sockets)) {
+      connectedSocket = s;
+      break;
+    }
+    return connectedSocket;
+  };
 
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect, qr } = update;
+    const socket = getSocket();
+    
+    if (qr) {
+      log(socket, `QR code received: ${qr}`);
+      socket.emit('qr', qr);
+    }
+    
     if (connection === 'connecting') {
-      socket.emit('status', { status: 'Connecting...', connected: false });
-      log(socket, `Bot ${botNumber} connecting...`);
-      if (qr) {
-        log(socket, `QR code received: ${qr}`);
-      }
+      if (socket) socket.emit('status', { status: 'Connecting...', connected: false });
+      log(socket, `Bot ${botNumber} is connecting...`);
     } else if (connection === 'open') {
       sessions.set(botNumber, sock);
-      socket.emit('status', { status: 'Connected', connected: true });
+      botStartTime = Date.now();
+      if (socket) socket.emit('status', { status: 'Connected', connected: true });
       log(socket, `Bot ${botNumber} is now connected.`);
+      
+      setInterval(() => {
+        if (socket) sendSystemStatus(socket);
+      }, 5000);
     } else if (connection === 'close') {
       const code = lastDisconnect?.error?.output?.statusCode;
       log(socket, `Bot ${botNumber} disconnected with code: ${code}`);
 
       if (code !== DisconnectReason.loggedOut) {
-        socket.emit('status', { status: 'Reconnecting...', connected: false });
+        if (socket) socket.emit('status', { status: 'Reconnecting...', connected: false });
         log(socket, `Attempting to reconnect bot ${botNumber}...`);
-        setTimeout(() => connectBot(botNumber, socket), 5000);
+        setTimeout(() => startBot(botNumber), 5000);
       } else {
-        socket.emit('status', { status: 'Logged out', connected: false });
+        if (socket) socket.emit('status', { status: 'Logged out', connected: false });
         sessions.delete(botNumber);
         log(socket, `Bot ${botNumber} logged out. Deleting session.`);
         try {
@@ -92,7 +143,9 @@ async function connectBot(botNumber, socket) {
       const sender = msg.key.remoteJid;
       const isBusiness = msg.message?.extendedTextMessage?.contextInfo?.businessOwnerJid || false;
       const text = msg.message.conversation || msg.message.extendedTextMessage?.text || '';
-
+      
+      const socket = getSocket();
+      
       if (isBusiness) {
         try {
           await sock.updateBlockStatus(sender, 'block');
@@ -103,9 +156,17 @@ async function connectBot(botNumber, socket) {
       }
 
       const lowerText = text.toLowerCase();
-      if (lowerText.includes('spam') || lowerText.includes('tidak pantas')) {
-        await sock.sendMessage(sender, { text: 'Pesan Anda telah dilaporkan karena tidak pantas.' });
-        log(socket, `Flagged and replied to a message from ${sender}`);
+      const inappropriateKeywords = ['spam', 'penipuan', 'scam', 'tidak pantas', 'porno', 'kasar'];
+      const hasInappropriateContent = inappropriateKeywords.some(keyword => lowerText.includes(keyword));
+
+      if (hasInappropriateContent) {
+        try {
+          await sock.sendMessage(sender, { text: 'Pesan Anda telah dilaporkan karena mengandung konten tidak pantas.' });
+          log(socket, `Blocked inappropriate message from ${sender}`);
+          await sock.updateBlockStatus(sender, 'block');
+        } catch (e) {
+          log(socket, `Failed to block ${sender} due to inappropriate message: ${e.message}`);
+        }
       }
     }
   });
@@ -113,42 +174,7 @@ async function connectBot(botNumber, socket) {
   return sock;
 }
 
-app.post('/pair', async (req, res) => {
-  const { botNumber } = req.body;
-  if (!botNumber) return res.status(400).json({ error: 'botNumber required' });
-
-  try {
-    const sessionDir = createSessionDir(botNumber);
-    const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
-
-    const sock = makeWaSocket({
-      auth: state,
-      printQRInTerminal: false,
-      logger: P({ level: 'silent' }),
-    });
-
-    sock.ev.on('connection.update', async (update) => {
-      if (update.connection === 'connecting') {
-        try {
-          const code = await sock.requestPairingCode(botNumber);
-          const formatted = code.match(/.{1,4}/g).join('-');
-          res.json({ pairingCode: formatted });
-          sock.ev.removeAllListeners();
-          sock.ev.removeAllListeners('creds.update');
-          sock.end();
-        } catch (e) {
-          res.status(500).json({ error: e.message });
-        }
-      }
-    });
-
-    sock.ev.on('creds.update', saveCreds);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
-app.post('/report', async (req, res) => {
+app.post('/report-and-block', async (req, res) => {
   const { botNumber, targetNumber, times } = req.body;
   if (!botNumber || !targetNumber || !times) {
     return res.status(400).json({ error: 'All fields required' });
@@ -160,13 +186,17 @@ app.post('/report', async (req, res) => {
 
   const sock = sessions.get(botNumber);
   const targetJid = `${targetNumber}@s.whatsapp.net`;
+  const socket = io.sockets.sockets.values().next().value;
 
   try {
+    log(socket, `Sending ${times} reports and blocking ${targetNumber}`);
     for (let i = 0; i < times; i++) {
       await sock.sendMessage(targetJid, { text: `Laporan otomatis ke #${targetNumber} (Percobaan #${i + 1})` });
       await new Promise(r => setTimeout(r, 1000));
     }
-    res.json({ success: true, message: `Berhasil mengirim ${times} laporan ke ${targetNumber}` });
+    await sock.updateBlockStatus(targetJid, 'block');
+    log(socket, `Successfully blocked ${targetNumber}`);
+    res.json({ success: true, message: `Berhasil mengirim ${times} laporan dan memblokir ${targetNumber}` });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -174,22 +204,42 @@ app.post('/report', async (req, res) => {
 
 io.on('connection', (socket) => {
   log(socket, 'Client connected to the server.');
-
-  socket.on('connectBot', async ({ botNumber }) => {
-    log(socket, `Received request to connect bot: ${botNumber}`);
-    try {
-      await connectBot(botNumber, socket);
-    } catch (e) {
-      log(socket, `Error connecting bot: ${e.message}`);
-      socket.emit('status', { status: 'Error: ' + e.message, connected: false });
-    }
-  });
-
   socket.on('disconnect', () => {
     console.log('Client disconnected.');
   });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`\nSilakan Masukkan nomor bot Anda di konsol untuk memulai pairing:`);
+  rl.question('Nomor Bot (contoh: 6281234567890): ', async (botNumber) => {
+    try {
+      const sessionDir = createSessionDir(botNumber);
+      const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
+      const sock = makeWaSocket({
+        auth: state,
+        printQRInTerminal: false,
+        logger: P({ level: 'silent' }),
+      });
+      sock.ev.on('connection.update', async (update) => {
+        if (update.connection === 'connecting') {
+          try {
+            const code = await sock.requestPairingCode(botNumber);
+            const formatted = code.match(/.{1,4}/g).join('-');
+            console.log(`\nKode Pairing Anda: ${formatted}`);
+            console.log(`Silakan masukkan kode ini di aplikasi WhatsApp Anda.`);
+            sock.ev.removeAllListeners();
+            sock.end();
+            startBot(botNumber);
+          } catch (e) {
+            console.error(`Error requesting pairing code: ${e.message}`);
+          }
+        }
+      });
+      sock.ev.on('creds.update', saveCreds);
+    } catch (e) {
+      console.error(`Failed to start pairing process: ${e.message}`);
+    }
+  });
+});
