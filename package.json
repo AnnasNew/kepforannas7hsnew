@@ -1,0 +1,15 @@
+{
+  "name": "whatsapp-bot-pairing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "github:kiuur/bails",
+    "express": "^4.21.2",
+    "socket.io": "^4.7.5",
+    "pino": "^9.5.0",
+    "fs-extra": "^11.2.0"
+  }
+}

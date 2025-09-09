@@ -1,716 +1,160 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kepforannas7hs - Official Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" href="https://files.catbox.moe/piai0a.jpg" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        :root {
-            --bg-color: #0c0c0c;
-            --card-bg-color: #1a1a1a;
-            --text-color: #f0f0f0;
-            --secondary-text-color: #a0a0a0;
-            --highlight-color: #4CAF50;
-            --modal-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-            --tiktok-color: #000000;
-            --telegram-color: #21a9e1;
-            --tiktok-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-            --telegram-shadow: 0 8px 25px rgba(33, 169, 225, 0.5);
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .main-container-outer {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .main-container {
-            width: 100%;
-            max-width: 480px;
-            background-color: var(--card-bg-color);
-            border-radius: 20px;
-            padding: 40px 25px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 10;
-        }
-        
-        .profile-pic-container {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 4px solid var(--highlight-color);
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.7);
-            margin-bottom: 20px;
-            animation: pulse-border 2s infinite ease-in-out;
-            transition: transform 0.4s ease-in-out;
-        }
-
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.7); }
-            50% { box-shadow: 0 0 30px rgba(76, 175, 80, 1), 0 0 10px rgba(255, 255, 255, 0.5); }
-            100% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.7); }
-        }
-
-        .profile-pic-container:hover {
-            transform: scale(1.08) rotate(5deg);
-        }
-
-        .profile-pic-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            animation: text-glow 2s infinite alternate;
-        }
-
-        @keyframes text-glow {
-            from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.3); }
-            to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5); }
-        }
-
-        .header-subtitle {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-            color: var(--secondary-text-color);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .info-group, .link-button {
-            width: 100%;
-            padding: 18px 25px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            background-color: #2c2c2c;
-            box-sizing: border-box;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: var(--text-color);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
-            animation: pop-in 0.5s ease-out backwards;
-        }
-
-        .info-group {
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 18px 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border-image: linear-gradient(to right, #f0f0f0, #4CAF50, #f0f0f0) 1;
-            animation: gradientBorder 4s infinite linear;
-        }
-        
-        .link-button {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .link-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            background-color: #3a3a3a;
-        }
-
-        @keyframes pop-in {
-            from {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        @keyframes gradientBorder {
-            0% { border-image: linear-gradient(to right, #f0f0f0, #4CAF50, #f0f0f0) 1; }
-            33% { border-image: linear-gradient(to right, #f0f0f0, #4CAF50, #21a9e1) 1; }
-            66% { border-image: linear-gradient(to right, #4CAF50, #21a9e1, #f0f0f0) 1; }
-            100% { border-image: linear-gradient(to right, #f0f0f0, #4CAF50, #f0f0f0) 1; }
-        }
-
-        .link-icon {
-            width: 35px;
-            height: 35px;
-            margin-right: 15px;
-            object-fit: contain;
-            transition: transform 0.3s;
-        }
-        
-        .link-button:hover .link-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease-out;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg-color);
-            padding: 30px;
-            border-radius: 25px;
-            width: 100%;
-            max-width: 480px;
-            position: relative;
-            text-align: center;
-            box-shadow: var(--modal-shadow);
-            animation: slideUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        #product-modal .modal-content {
-            max-width: 380px;
-            padding: 25px;
-        }
-        
-        .close-btn {
-            color: var(--secondary-text-color);
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 2.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s, transform 0.3s;
-            line-height: 1;
-        }
-
-        .close-btn:hover {
-            color: #ff5722;
-            transform: scale(1.2) rotate(90deg);
-        }
-
-        .modal-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 25px;
-            color: var(--highlight-color);
-        }
-
-        .modal-info-group {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .info-item:last-child {
-            border-bottom: none;
-        }
-
-        .info-label {
-            font-weight: 500;
-            color: var(--secondary-text-color);
-        }
-
-        .info-value {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            color: var(--text-color);
-            word-break: break-all;
-        }
-
-        .order-button, .download-button {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--highlight-color);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .order-button:hover, .download-button:hover {
-            background-color: #388e3c;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5);
-        }
-        
-        .product-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .product-item {
-            display: flex;
-            align-items: center;
-            background-color: #2c2c2c;
-            border-radius: 12px;
-            padding: 15px;
-            text-decoration: none;
-            color: var(--text-color);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .product-item:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-        }
-
-        .product-img {
-            width: 70px;
-            height: 70px;
-            border-radius: 8px;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-
-        .product-info {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
-        .product-title {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 1.2rem;
-            color: var(--text-color);
-        }
-
-        .product-price {
-            font-weight: 400;
-            color: var(--secondary-text-color);
-        }
-
-        .quantity-control {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
-            gap: 15px;
-        }
-
-        .quantity-btn {
-            background-color: #333;
-            color: var(--text-color);
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-
-        .quantity-btn:hover {
-            background-color: var(--highlight-color);
-            transform: scale(1.1);
-        }
-
-        #product-quantity {
-            width: 60px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            background-color: #222;
-            border: 1px solid var(--highlight-color);
-            color: var(--text-color);
-            border-radius: 8px;
-            -moz-appearance: textfield;
-            touch-action: manipulation;
-        }
-        #product-quantity::-webkit-inner-spin-button, #product-quantity::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .info-group h3 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-color);
-            margin-top: 0;
-            margin-bottom: 10px;
-            text-align: left;
-            width: 100%;
-        }
-        .info-group p {
-            margin: 5px 0;
-            font-weight: 400;
-            color: var(--secondary-text-color);
-            line-height: 1.4;
-            font-size: 0.95rem;
-        }
-
-        #notification-area {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--highlight-color);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-            z-index: 3000;
-            font-size: 0.95rem;
-            white-space: nowrap;
-        }
-
-        #notification-area.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @media (max-width: 600px) {
-            .main-container { padding: 25px 15px; }
-            .profile-name { font-size: 1.8rem; }
-            .link-button, .info-group { font-size: 1rem; padding: 15px 20px; }
-            .link-icon { width: 30px; height: 30px; margin-right: 10px; }
-            .modal-content { padding: 20px; max-width: 90%; }
-            .modal-title { font-size: 1.6rem; }
-            #product-modal .modal-content { max-width: 90%; }
-            .order-button, .download-button { font-size: 1rem; }
-            .product-img { width: 60px; height: 60px; }
-            .product-title { font-size: 1.1rem; }
-            .info-group h3 { font-size: 1.1rem; }
-            .info-group p { font-size: 0.85rem; }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WhatsApp Bot Control Panel</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    margin: 0; padding: 20px;
+  }
+  .container {
+    max-width: 480px;
+    margin: auto;
+    background: rgba(0,0,0,0.5);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  h1 { text-align: center; margin-bottom: 20px; }
+  input, button {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 6px;
+    border: none;
+    font-size: 16px;
+  }
+  input { outline: none; }
+  button {
+    background: #764ba2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  button:hover {
+    background: #5a3680;
+  }
+  #logArea {
+    width: 100%;
+    height: 150px;
+    background: #222;
+    color: #0f0;
+    font-family: monospace;
+    padding: 10px;
+    border-radius: 6px;
+    resize: none;
+  }
+  .status {
+    margin: 10px 0;
+    font-weight: bold;
+  }
+</style>
 </head>
-<body class="loaded">
+<body>
+  <div class="container">
+    <h1>WhatsApp Bot Control Panel</h1>
 
-<div class="main-container-outer">
-    <div class="main-container">
-        <div class="profile-pic-container">
-            <img src="https://files.catbox.moe/piai0a.jpg" alt="Profile Picture">
-        </div>
-        <h1 class="profile-name">Kepforannas7hs</h1>
-        <p class="header-subtitle">Official Hub for All Your Needs</p>
+    <label>Nomor Bot (contoh: 6281234567890)</label>
+    <input id="botNumber" placeholder="Masukkan nomor bot" />
 
-        <div class="info-group">
-            <h3>Informasi Tentang Saya</h3>
-            <p><strong>Nama:</strong> Kepforannas7hs</p>
-            <p><strong>Profesi:</strong> Developer Pemula yang Keren</p>
-            <p><strong>Keahlian:</strong> Desain UI/UX, Frontend Development (HTML, CSS, JavaScript dasar)</p>
-            <p><strong>Misi:</strong> Membangun website yang tidak hanya berfungsi tetapi juga memiliki tampilan yang modern dan menarik. Terus belajar dan bereksperimen dengan teknologi web terbaru.</p>
-        </div>
+    <button id="btnPair">Request Pairing Code</button>
+    <p id="pairingCode"></p>
 
-        <button class="link-button" onclick="openModal('qris-modal')">
-            <img src="https://files.catbox.moe/dmat3t.png" alt="QRIS Icon" class="link-icon"> QRIS
-        </button>
-        <button class="link-button" onclick="openModal('dana-modal')">
-            <img src="https://files.catbox.moe/3mobvi.png" alt="DANA Icon" class="link-icon"> DANA
-        </button>
-        <button class="link-button" onclick="openModal('gopay-modal')">
-            <img src="https://files.catbox.moe/cq287m.png" alt="Gopay Icon" class="link-icon"> GOPAY
-        </button>
-        <button class="link-button" onclick="openModal('shop-modal')">
-            <img src="https://files.catbox.moe/nef57i.png" alt="Shop Icon" class="link-icon"> Lihat Produk
-        </button>
-        <button class="link-button" onclick="openLink('https://www.tiktok.com/@kepforannas7hs')">
-            <img src="https://files.catbox.moe/thdekj.png" alt="TikTok Icon" class="link-icon"> TikTok
-        </button>
-        <button class="link-button" onclick="openLink('https://t.me/Alpooooooofoluv')">
-            <img src="https://files.catbox.moe/w2z0l9.png" alt="Telegram Icon" class="link-icon"> Telegram
-        </button>
-    </div>
-</div>
+    <button id="btnConnect">Connect Bot</button>
+    <p class="status" id="status">Status: Disconnected</p>
 
-<div id="qris-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('qris-modal')">&times;</span>
-        <h2 class="modal-title">Pembayaran QRIS</h2>
-        <img src="https://files.catbox.moe/cmgq0k.jpg" alt="QRIS Code" style="width: 100%; max-width: 250px; border-radius: 12px; margin-bottom: 20px;">
-        <div class="modal-info-group">
-            <div class="info-item">
-                <span class="info-label">Keterangan:</span>
-                <span class="info-value">Scan kode QR ini untuk pembayaran.</span>
-            </div>
-        </div>
-        <button class="download-button" onclick="downloadImage('https://files.catbox.moe/cmgq0k.jpg', 'QRIS_Kepforannas7hs.jpg')">
-            <i class="fas fa-download"></i> Unduh QR
-        </button>
-    </div>
-</div>
+    <hr style="border-color: #555;" />
 
-<div id="dana-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('dana-modal')">&times;</span>
-        <h2 class="modal-title">Pembayaran DANA</h2>
-        <div class="modal-info-group">
-            <div class="info-item">
-                <span class="info-label">Nomor DANA:</span>
-                <span id="dana-number" class="info-value">083173814158</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Atas Nama:</span>
-                <span class="info-value">Kepforannas7hsA</span>
-            </div>
-        </div>
-        <button class="order-button" onclick="copyText('083173814158')">
-            <i class="fas fa-copy"></i> Salin Nomor
-        </button>
-    </div>
-</div>
+    <label>Nomor Target (contoh: 6289876543210)</label>
+    <input id="targetNumber" placeholder="Masukkan nomor target" />
 
-<div id="gopay-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('gopay-modal')">&times;</span>
-        <h2 class="modal-title">Pembayaran GOPAY</h2>
-        <div class="modal-info-group">
-            <div class="info-item">
-                <span class="info-label">Nomor GOPAY:</span>
-                <span id="gopay-number" class="info-value">083173814158</span>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Atas Nama:</span>
-                <span class="info-value">Kepforannas7hsA</span>
-            </div>
-        </div>
-        <button class="order-button" onclick="copyText('083173814158')">
-            <i class="fas fa-copy"></i> Salin Nomor
-        </button>
-    </div>
-</div>
+    <label>Jumlah Report</label>
+    <input id="reportTimes" type="number" min="1" max="20" value="1" />
 
-<div id="shop-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('shop-modal')">&times;</span>
-        <h2 class="modal-title">Daftar Produk</h2>
-        <div class="product-list">
-            <button class="product-item" onclick="openProductModal('Produk A', 'https://files.catbox.moe/lh9x84.jpeg', 15000)">
-                <img src="https://files.catbox.moe/lh9x84.jpeg" alt="Produk A" class="product-img">
-                <div class="product-info">
-                    <span class="product-title">Produk A</span>
-                    <span class="product-price">Rp 15.000</span>
-                </div>
-            </button>
-            <button class="product-item" onclick="openProductModal('Sutra', 'https://files.catbox.moe/lh9x84.jpeg', 25000)">
-                <img src="https://files.catbox.moe/lh9x84.jpeg" alt="Sutra" class="product-img">
-                <div class="product-info">
-                    <span class="product-title">Sutra</span>
-                    <span class="product-price">Rp 25.000</span>
-                </div>
-            </button>
-            <button class="product-item" onclick="openProductModal('Sutra Pack', 'https://files.catbox.moe/lh9x84.jpeg', 50000)">
-                <img src="https://files.catbox.moe/lh9x84.jpeg" alt="Sutra Pack" class="product-img">
-                <div class="product-info">
-                    <span class="product-title">Sutra Pack</span>
-                    <span class="product-price">Rp 50.000</span>
-                </div>
-            </button>
-        </div>
-    </div>
-</div>
+    <button id="btnReport">Kirim Report</button>
+    <p id="reportResult"></p>
 
-<div id="product-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('product-modal')">&times;</span>
-        <h2 id="modal-product-name" class="modal-title"></h2>
-        <div class="modal-body">
-            <img id="modal-product-image" src="" alt="Produk" style="width: 100%; max-width: 200px; border-radius: 12px; margin-bottom: 20px;">
-            <div class="info-item">
-                <span class="info-label">Harga Satuan:</span>
-                <span id="modal-product-price" class="info-value"></span>
-            </div>
-            <div class="quantity-control">
-                <button class="quantity-btn" onclick="changeQuantity(-1)">-</button>
-                <input type="number" id="product-quantity" value="1" min="1" readonly>
-                <button class="quantity-btn" onclick="changeQuantity(1)">+</button>
-            </div>
-            <div class="info-item">
-                <span class="info-label">Total Harga:</span>
-                <span id="total-price" class="info-value"></span>
-            </div>
-            <button class="order-button" onclick="sendOrder()">
-                <i class="fab fa-telegram-plane"></i> Order Sekarang
-            </button>
-        </div>
-    </div>
-</div>
+    <h3>Log Aktivitas</h3>
+    <textarea id="logArea" readonly></textarea>
+  </div>
 
-<div id="notification-area" class="notification"></div>
-
+<script src="/socket.io/socket.io.js"></script>
 <script>
-    function openModal(modalId) {
-        document.getElementById(modalId).classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
+  const socket = io();
 
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('show');
-        document.body.style.overflow = 'auto';
-    }
-    
-    let currentProductPrice = 0;
-    let currentProductName = '';
+  const botNumberInput = document.getElementById('botNumber');
+  const btnPair = document.getElementById('btnPair');
+  const pairingCodeP = document.getElementById('pairingCode');
+  const btnConnect = document.getElementById('btnConnect');
+  const statusP = document.getElementById('status');
+  const targetNumberInput = document.getElementById('targetNumber');
+  const reportTimesInput = document.getElementById('reportTimes');
+  const btnReport = document.getElementById('btnReport');
+  const reportResultP = document.getElementById('reportResult');
+  const logArea = document.getElementById('logArea');
 
-    function openProductModal(name, image, price) {
-        currentProductName = name;
-        document.getElementById('modal-product-name').innerText = name;
-        document.getElementById('modal-product-image').src = image;
-        document.getElementById('modal-product-price').innerText = `Rp ${price.toLocaleString('id-ID')}`;
-        currentProductPrice = price;
-        document.getElementById('product-quantity').value = 1;
-        updateTotalPrice();
-        openModal('product-modal');
+  btnPair.onclick = async () => {
+    const botNumber = botNumberInput.value.trim();
+    if (!botNumber) return alert('Masukkan nomor bot!');
+    pairingCodeP.textContent = 'Meminta kode pairing...';
+    try {
+      const res = await fetch('/pair', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ botNumber }),
+      });
+      const data = await res.json();
+      if (data.pairingCode) {
+        pairingCodeP.textContent = 'Kode Pairing: ' + data.pairingCode;
+      } else {
+        pairingCodeP.textContent = 'Error: ' + (data.error || 'Tidak diketahui');
+      }
+    } catch (e) {
+      pairingCodeP.textContent = 'Error jaringan: ' + e.message;
     }
+  };
 
-    function changeQuantity(amount) {
-        const quantityInput = document.getElementById('product-quantity');
-        let currentQuantity = parseInt(quantityInput.value);
-        currentQuantity += amount;
-        if (currentQuantity < 1) {
-            currentQuantity = 1;
-        }
-        quantityInput.value = currentQuantity;
-        updateTotalPrice();
-    }
+  btnConnect.onclick = () => {
+    const botNumber = botNumberInput.value.trim();
+    if (!botNumber) return alert('Masukkan nomor bot!');
+    statusP.textContent = 'Status: Menghubungkan...';
+    socket.emit('connectBot', { botNumber });
+  };
 
-    function updateTotalPrice() {
-        const quantity = parseInt(document.getElementById('product-quantity').value);
-        const totalPrice = quantity * currentProductPrice;
-        document.getElementById('total-price').innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+  btnReport.onclick = async () => {
+    const botNumber = botNumberInput.value.trim();
+    const targetNumber = targetNumberInput.value.trim();
+    const times = parseInt(reportTimesInput.value);
+    if (!botNumber || !targetNumber || !times) return alert('Isi semua field dengan benar!');
+    reportResultP.textContent = 'Mengirim report...';
+    try {
+      const res = await fetch('/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ botNumber, targetNumber, times }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        reportResultP.textContent = data.message;
+      } else {
+        reportResultP.textContent = 'Error: ' + (data.error || 'Tidak diketahui');
+      }
+    } catch (e) {
+      reportResultP.textContent = 'Error jaringan: ' + e.message;
     }
+  };
 
-    function sendOrder() {
-        const productQuantity = document.getElementById('product-quantity').value;
-        const totalPrice = document.getElementById('total-price').innerText;
-        const message = `Halo, saya ingin memesan produk: ${currentProductName}\nJumlah: ${productQuantity}\nTotal Harga: ${totalPrice}`;
-        const telegramLink = `https://t.me/Alpooooooofoluv?text=${encodeURIComponent(message)}`;
-        window.open(telegramLink, '_blank');
-        closeModal('product-modal');
-        showNotification('Pesanan berhasil dikirim!');
-    }
-    
-    function copyText(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            showNotification('Nomor berhasil disalin!');
-        }).catch(err => {
-            console.error('Gagal menyalin teks: ', err);
-            alert('Gagal menyalin teks.');
-        });
-    }
+  socket.on('status', ({ status, connected }) => {
+    statusP.textContent = 'Status: ' + status;
+  });
 
-    function downloadImage(url, filename) {
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showNotification('QR berhasil diunduh!');
-    }
-
-    function showNotification(message) {
-        const notification = document.getElementById('notification-area');
-        notification.innerText = message;
-        notification.classList.add('show');
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
-    
-    function openLink(url) {
-        window.open(url, '_blank');
-    }
-
-    window.onclick = function(event) {
-        const modals = document.querySelectorAll('.modal.show');
-        modals.forEach(modal => {
-            if (event.target === modal) {
-                closeModal(modal.id);
-            }
-        });
-    }
+  socket.on('log', (msg) => {
+    logArea.value += new Date().toLocaleTimeString() + ': ' + msg + '\n';
+    logArea.scrollTop = logArea.scrollHeight;
+  });
 </script>
-
 </body>
 </html>
