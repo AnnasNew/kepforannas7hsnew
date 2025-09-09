@@ -2,88 +2,197 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>WhatsApp Bot Control Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Repot by Kepforannas7hs</title>
 <style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    margin: 0; padding: 20px;
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  :root {
+    --primary-color: #6a11cb;
+    --secondary-color: #2575fc;
+    --card-bg: rgba(255, 255, 255, 0.1);
+    --input-bg: rgba(255, 255, 255, 0.2);
+    --border-color: rgba(255, 255, 255, 0.3);
+    --text-color: #e0e0e0;
+    --log-bg: rgba(0, 0, 0, 0.5);
+    --log-text: #00ff6a;
   }
-  .container {
-    max-width: 480px;
-    margin: auto;
-    background: rgba(0,0,0,0.5);
-    border-radius: 12px;
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
   }
-  h1 { text-align: center; margin-bottom: 20px; }
+
+  .dashboard-container {
+    width: 100%;
+    max-width: 500px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+  }
+
+  .section {
+    margin-bottom: 25px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
   input, button {
     width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 6px;
-    border: none;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
     font-size: 16px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
   }
-  input { outline: none; }
+
+  input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  input:focus {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: #fff;
+    outline: none;
+  }
+
   button {
-    background: #764ba2;
-    color: white;
     cursor: pointer;
-    font-weight: bold;
+    background: var(--secondary-color);
+    border-color: var(--secondary-color);
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    animation: pulse 2s infinite;
   }
+
   button:hover {
-    background: #5a3680;
+    background: var(--primary-color);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    animation: none;
   }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+
+  .status-info, .pairing-code, .report-result {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
+  }
+  .status-info.connected { color: #00ff6a; }
+  .status-info.disconnected { color: #ff3b5b; }
+  .status-info.connecting { color: #ffc107; }
+
+  hr {
+    border: none;
+    height: 1px;
+    background: var(--border-color);
+    margin: 30px 0;
+  }
+
+  .log-container {
+    margin-top: 30px;
+  }
+
   #logArea {
     width: 100%;
-    height: 150px;
-    background: #222;
-    color: #0f0;
-    font-family: monospace;
-    padding: 10px;
-    border-radius: 6px;
+    height: 200px;
+    background: var(--log-bg);
+    color: var(--log-text);
+    font-family: 'Courier New', monospace;
+    padding: 15px;
+    border-radius: 10px;
     resize: none;
+    border: 1px solid rgba(0, 255, 106, 0.2);
+    transition: all 0.3s ease;
   }
-  .status {
-    margin: 10px 0;
-    font-weight: bold;
+  #logArea:focus {
+    border-color: var(--log-text);
+    box-shadow: 0 0 15px rgba(0, 255, 106, 0.3);
   }
 </style>
 </head>
 <body>
-  <div class="container">
-    <h1>WhatsApp Bot Control Panel</h1>
+  <div class="dashboard-container">
+    <h1>WhatsApp Bot Dashboard</h1>
 
-    <label>Nomor Bot (contoh: 6281234567890)</label>
-    <input id="botNumber" placeholder="Masukkan nomor bot" />
+    <div class="section">
+      <label for="botNumber">Nomor Bot (contoh: 6281234567890)</label>
+      <input id="botNumber" placeholder="Masukkan nomor bot" />
+      <button id="btnPair">Request Pairing Code</button>
+      <p id="pairingCode" class="pairing-code">Menunggu kode pairing...</p>
+    </div>
 
-    <button id="btnPair">Request Pairing Code</button>
-    <p id="pairingCode"></p>
+    <div class="section">
+      <button id="btnConnect">Connect Bot</button>
+      <p id="status" class="status-info disconnected">Status: Disconnected</p>
+    </div>
 
-    <button id="btnConnect">Connect Bot</button>
-    <p class="status" id="status">Status: Disconnected</p>
+    <hr />
 
-    <hr style="border-color: #555;" />
+    <div class="section">
+      <label for="targetNumber">Nomor Target (contoh: 6289876543210)</label>
+      <input id="targetNumber" placeholder="Masukkan nomor target" />
 
-    <label>Nomor Target (contoh: 6289876543210)</label>
-    <input id="targetNumber" placeholder="Masukkan nomor target" />
+      <label for="reportTimes">Jumlah Report</label>
+      <input id="reportTimes" type="number" min="1" max="50" value="5" />
 
-    <label>Jumlah Report</label>
-    <input id="reportTimes" type="number" min="1" max="20" value="1" />
+      <button id="btnReport">Kirim Report</button>
+      <p id="reportResult" class="report-result">Hasil report akan muncul di sini.</p>
+    </div>
 
-    <button id="btnReport">Kirim Report</button>
-    <p id="reportResult"></p>
-
-    <h3>Log Aktivitas</h3>
-    <textarea id="logArea" readonly></textarea>
+    <div class="log-container">
+      <h3>Log Aktivitas</h3>
+      <textarea id="logArea" readonly></textarea>
+    </div>
   </div>
 
-<script src="/socket.io/socket.io.js"></script>
+<script src="https://<domain_panel_hosting_anda>/socket.io/socket.io.js"></script>
 <script>
-  const socket = io();
+  const serverUrl = "https://<domain_panel_hosting_anda>";
+  const socket = io(serverUrl);
 
   const botNumberInput = document.getElementById('botNumber');
   const btnPair = document.getElementById('btnPair');
@@ -96,21 +205,37 @@
   const reportResultP = document.getElementById('reportResult');
   const logArea = document.getElementById('logArea');
 
+  function updateStatus(status, connected = false) {
+    statusP.textContent = `Status: ${status}`;
+    statusP.className = 'status-info';
+    if (connected) {
+      statusP.classList.add('connected');
+    } else {
+      statusP.classList.add('disconnected');
+    }
+    if (status === 'Connecting...' || status === 'Reconnecting...') {
+      statusP.classList.add('connecting');
+    }
+  }
+
   btnPair.onclick = async () => {
     const botNumber = botNumberInput.value.trim();
-    if (!botNumber) return alert('Masukkan nomor bot!');
+    if (!botNumber) {
+      alert('Masukkan nomor bot!');
+      return;
+    }
     pairingCodeP.textContent = 'Meminta kode pairing...';
     try {
-      const res = await fetch('/pair', {
+      const res = await fetch(`${serverUrl}/pair`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ botNumber }),
       });
       const data = await res.json();
       if (data.pairingCode) {
-        pairingCodeP.textContent = 'Kode Pairing: ' + data.pairingCode;
+        pairingCodeP.textContent = `Kode Pairing: ${data.pairingCode}`;
       } else {
-        pairingCodeP.textContent = 'Error: ' + (data.error || 'Tidak diketahui');
+        pairingCodeP.textContent = `Error: ${data.error || 'Tidak diketahui'}`;
       }
     } catch (e) {
       pairingCodeP.textContent = 'Error jaringan: ' + e.message;
@@ -119,8 +244,11 @@
 
   btnConnect.onclick = () => {
     const botNumber = botNumberInput.value.trim();
-    if (!botNumber) return alert('Masukkan nomor bot!');
-    statusP.textContent = 'Status: Menghubungkan...';
+    if (!botNumber) {
+      alert('Masukkan nomor bot!');
+      return;
+    }
+    updateStatus('Connecting...');
     socket.emit('connectBot', { botNumber });
   };
 
@@ -128,10 +256,13 @@
     const botNumber = botNumberInput.value.trim();
     const targetNumber = targetNumberInput.value.trim();
     const times = parseInt(reportTimesInput.value);
-    if (!botNumber || !targetNumber || !times) return alert('Isi semua field dengan benar!');
+    if (!botNumber || !targetNumber || !times || times <= 0) {
+      alert('Isi semua field dengan benar!');
+      return;
+    }
     reportResultP.textContent = 'Mengirim report...';
     try {
-      const res = await fetch('/report', {
+      const res = await fetch(`${serverUrl}/report`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ botNumber, targetNumber, times }),
@@ -140,15 +271,15 @@
       if (data.success) {
         reportResultP.textContent = data.message;
       } else {
-        reportResultP.textContent = 'Error: ' + (data.error || 'Tidak diketahui');
+        reportResultP.textContent = `Error: ${data.error || 'Tidak diketahui'}`;
       }
     } catch (e) {
-      reportResultP.textContent = 'Error jaringan: ' + e.message;
+      reportResultP.textContent = `Error jaringan: ${e.message}`;
     }
   };
 
   socket.on('status', ({ status, connected }) => {
-    statusP.textContent = 'Status: ' + status;
+    updateStatus(status, connected);
   });
 
   socket.on('log', (msg) => {
