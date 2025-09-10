@@ -1,28 +1,43 @@
 {
-  "name": "whatsapp-bot-pairing",
+  "name": "kepforannas7hs",
   "version": "1.0.0",
+  "description": "gatau",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.js"
   },
+  "keywords": [
+    "whiskeysockets",
+    "multi-device",
+    "kepforannas7hs"
+  ],
+  "author": "kepforannas7hs",
+  "license": "MIT",
   "dependencies": {
+    "@adiwajshing/keyed-db": "^0.2.4",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "github:seiren-primrose/PL-Baileys-Old",
+    "awesome-phonenumber": "^6.4.0",
     "axios": "^1.6.0",
-    "body-parser": "^1.20.3",
+    "body-parser": "^1.20.2",
     "chalk": "^4.1.2",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "node-fetch": "^2.6.1",
-    "fs": "^0.0.1-security",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
     "fs-extra": "^11.2.0",
     "js-confuser": "1.7.3",
-    "moment": "^2.29.1",
-    "node-fetch": "latest",
-    "pino": "^9.5.0",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45",
+    "node-fetch": "^2.7.0",
+    "path": "^0.12.7",
+    "pino": "^9.0.0",
     "qrcode-terminal": "^0.12.0",
     "readline-sync": "^1.4.10",
     "socket.io": "^4.7.5",
     "telegraf": "^4.16.3",
-    "yt-search": "latest"
+    "yt-search": "^2.10.4"
   }
 }

