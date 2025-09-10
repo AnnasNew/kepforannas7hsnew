@@ -37,7 +37,7 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 5036
 
-const { carousels2, forceCall } = require('./bug');
+const { XanfcXscary, XcrashXann, fo1} = require('./bugs');
 const { getRequest, sendTele } = require('./telegram');
 
 app.enable("trust proxy");

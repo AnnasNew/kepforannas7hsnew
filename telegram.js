@@ -1,4 +1,4 @@
-require('../settings/config')
+require('./config')
 const axios = require('axios');
 
 async function getRequest(req) {
